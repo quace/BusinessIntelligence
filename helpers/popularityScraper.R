@@ -15,4 +15,4 @@ hh <- htmlParse(popular,asText=T)
 
 #use xpath to extract data
 names <- xpathSApply(hh,'//*[@id="Player-card"]/div[3]',xmlValue)
-
+pictures <- xpathSApply(hh, '//*[@id="player_pic"]',xmlGetAttr,'src')
