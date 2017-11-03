@@ -10,7 +10,7 @@ library(DT)
 #source("loaddata/load_soccer_data.R")
 
 # Source helpers ----
-#source("helpers/helpers.R")
+source("helpers/helpers.R")
 
 # User interface ----
 source("UI/UI.R")

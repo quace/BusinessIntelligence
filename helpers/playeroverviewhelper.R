@@ -1,0 +1,27 @@
+#METHOD 1: works but super duper slow
+#TODO: fix!
+#construct a new data frame with only a part of the info
+newPlayerStats <- data.frame("name" = player_attributes$player_fifa_api_id,
+                             "overal rating" = player_attributes$overall_rating,
+                             "potential" = player_attributes$potential,
+                             "preferred foot" = player_attributes$preferred_foot)
+
+#replace the player id -> name
+row.index = function(d) which (newPlayerStats$name == d)[1]
+indices = sapply (player$player_fifa_api_id, row.index)
+newPlayerStats$name[indices] = player$player_name
+
+#drop all rows that didnt match with a name
+playerStats = newPlayerStats[indices,]
+
+
+
+#METHOD 2: WERKT VAN GEEN KANTEN EN I DUNNO WHY
+#simplefiedPlayer  <- data.frame( "player_fifa_api_id" = player$player_fifa_api_id,"name" = player$player_name)
+#mergedPlayers <- merge(simplefiedPlayer, player_attributes, by ="player_fifa_api_id")
+#newPlayerStats <- mergedPlayers
+
+#newPlayerStats <- data.frame("name" = mergedPlayers$player_name,
+ #                            "overal rating" = mergedPlayers$overall_rating,
+  #                           "potential" = mergedPlayers$potential,
+   #                          "preferred foot" = mergedPlayers$preferred_foot)

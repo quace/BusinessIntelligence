@@ -2,9 +2,10 @@ ui <- navbarPage("Soccer Analysis",
                  tabPanel("Player Overview",
                           sidebarLayout(
                             sidebarPanel(
-                             # helpText("Type the name of a player to see their statistics."),
-                            #  textInput("playernamestats",label=h3("Player name"),value="")
-                              
+                            #  helpText("Select a club"),
+                              selectInput("selectclubstats",label=h3("Select a club"),
+                                          choices = list("Show all clubs" = 1, "Club 2" = 2, "Club 3" = 3),
+                                          selected = 1)
                             ),
                             mainPanel(
                               DT::dataTableOutput("playerstatstable")

@@ -2,7 +2,7 @@
 server <- function(input, output) {
   
   output$playerstatstable = DT::renderDataTable({
-    mtcars
+    playerStats
   })
   
   
