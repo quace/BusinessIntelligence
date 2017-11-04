@@ -1,15 +1,12 @@
+#import separate UI pages
+source("UI/BRMUI.R")
+source("UI/POUI.R")
+
 ui <- navbarPage("Soccer Analysis",
                  tabPanel("Player Overview",
                           sidebarLayout(
-                            sidebarPanel(
-                            #  helpText("Select a club"),
-                              selectInput("selectclubstats",label=h3("Select a club"),
-                                          choices = list("Show all clubs" = 1, "Club 2" = 2, "Club 3" = 3),
-                                          selected = 1)
-                            ),
-                            mainPanel(
-                              DT::dataTableOutput("playerstatstable")
-                            )
+                            sidebarPanel = POSidebarPanel,
+                            mainPanel = POMainPanel
                           )
                  ),
                  
@@ -17,7 +14,12 @@ ui <- navbarPage("Soccer Analysis",
                  tabPanel("Match Advise"),
                  tabPanel("Loan/Sell"),
                  tabPanel("Ideal Team"),
-                 tabPanel("Brand-related Marketing"),
+                 tabPanel("Brand-related Marketing",
+                          sidebarLayout(
+                            sidebarPanel = BRMSidebarPanel,
+                           
+                            mainPanel = BRMMainPanel
+                          )),
                  inverse=TRUE
                  
 )
