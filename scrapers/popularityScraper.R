@@ -14,6 +14,7 @@ popular <- url2 %>%
 hh <- htmlParse(popular,asText=T)
 
 #use xpath to extract data
+#TODO: weird symbols in name -> fix this asap
 names <- xpathSApply(hh,'//*[@id="Player-card"]/div[3]',xmlValue)
 pictures <- xpathSApply(hh, '//*[@id="player_pic"]',xmlGetAttr,'src')
 ratings <- xpathSApply(hh,'//*[@id="Player-card"]/div[2]',xmlValue)
@@ -34,3 +35,8 @@ popularPlayers <- data.frame("name" = names,
                              "club" = clubpics,
                              "position" = positions,
                              "price" = ps_prices)
+
+popularity <- data.frame("name" = popularPlayers$name,
+                         "rating"=popularPlayers$rating,
+                         "position" = popularPlayers$position,
+                         "price" = popularPlayers$price)

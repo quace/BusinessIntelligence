@@ -4,8 +4,8 @@ BRMSidebarPanel <- sidebarPanel()
 
 BRMMainPanel <-  mainPanel (
   tabsetPanel(
-    tabPanel("Plot", plotOutput("plot")), 
-    tabPanel("Summary", verbatimTextOutput("summary")), 
-    tabPanel("Table", tableOutput("table"))
+    tabPanel("Visual", shiny::dataTableOutput("playerImages")), 
+    tabPanel("Details",  DT::dataTableOutput("popularitytable"))
+    #tabPanel("Table", tableOutput("table"))
   )
 )

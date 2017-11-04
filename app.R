@@ -9,6 +9,9 @@ library(DT)
 #load the database
 #source("loaddata/load_soccer_data.R")
 
+#scrape data
+#source("scrapers/scrapers.R")
+
 # Source helpers ----
 source("helpers/helpers.R")
 
