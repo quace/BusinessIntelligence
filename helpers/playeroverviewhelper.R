@@ -1,5 +1,7 @@
 library(tidyr)
 library(dplyr)
+library(ggplot2)
+library(ggthemes)
 
 #METHOD 1: works but super duper slow
 #TODO: fix!
@@ -33,4 +35,7 @@ playerStats = newPlayerStats[indices,]
 
 
 #hometeams <- matches  %>% select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)%>% group_by(id,playeridggplot(aes(x=date,y=home_team_goal))+geom_col
+matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+#theme_hc(bgcolor = "darkunica") +
+ # scale_fill_hc("darkunica")"
