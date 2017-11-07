@@ -11,7 +11,7 @@ popular <- url2 %>%
 # html_text()
 
 
-hh <- htmlParse(popular,asText=T)
+hh <- htmlParse(popular,asText=T,encoding='UTF-8')
 
 #use xpath to extract data
 #TODO: weird symbols in name -> fix this asap

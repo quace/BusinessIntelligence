@@ -1,3 +1,6 @@
+library(tidyr)
+library(dplyr)
+
 #METHOD 1: works but super duper slow
 #TODO: fix!
 #construct a new data frame with only a part of the info
@@ -25,3 +28,9 @@ playerStats = newPlayerStats[indices,]
  #                            "overal rating" = mergedPlayers$overall_rating,
   #                           "potential" = mergedPlayers$potential,
    #                          "preferred foot" = mergedPlayers$preferred_foot)
+
+
+
+
+#hometeams <- matches  %>% select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)%>% group_by(id,playeridggplot(aes(x=date,y=home_team_goal))+geom_col
+
