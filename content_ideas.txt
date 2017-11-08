@@ -1,0 +1,40 @@
+BI project
+https://www.futbin.com/18/players scrapen naar club, land, foto's,... 99 pagina's
+Player Overview
+    -zoekfunctie (= > <):
+        INPUT:
+        -speler naam
+        -club
+        -attributen: neem het gemiddelde van de verschillende cijfers die we hebben
+            -lopen
+            -schieten
+            -passen
+            -behendigheid
+            -defensive
+            -fysiek
+            -overal rating 
+            -potential
+            -prijs
+            
+        OUTPUT:
+        -foto van de speler (scrape + waar we geen van vinden een default pic)
+        -....
+        
+        -grafiek: performance over tijd (?)  (link match & speler = player_api_id) (aanpassen aan speler, soort performance,...)
+        -history van welke clubs de speler gespeeld heeft (datum match + home_player/away_player + club)
+        
+        
+        
+Match Advise
+    -opstelling van een match (veld)
+
+Loan/Sell
+
+
+#Ideal Team
+
+Brand-Related Marketing
+    -top influencers
+    -populariteit grafiek ?
+        
+        

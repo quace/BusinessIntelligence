@@ -1,6 +1,23 @@
 library("rvest")
 library(XML)
 
+handlePrices <- function(data){
+  for(i in 1:length(data)){
+    price = data[i]
+    if(grepl("K",price)){
+      price = substr(price, 1, nchar(price)-1)
+      price = as.numeric(price) * 1000
+    } else if(grepl("M",price)){
+      price = substr(price, 1, nchar(price)-1)
+      price = as.numeric(price)*1000000
+    }
+    if(is.na(price)){price=0}
+    data[i] = price
+  }
+  return (data)
+}
+
+
 #Scrape the most popular players
 url2 <- "https://www.futbin.com/popular"
 popular <- url2 %>%
@@ -22,9 +39,16 @@ countrypics <- xpathSApply(hh,'//*[@id="player_nation"]',xmlGetAttr,'src')
 clubpics <- xpathSApply(hh,'//*[@id="player_club"]',xmlGetAttr,'src')
 positions <- xpathSApply(hh,'//*[@id="Player-card"]/div[4]',xmlValue)
 
-#TODO: transform prices to actual numbers
+
 ps_prices <- xpathSApply(hh,'//*[@class="ps_main_price"]',xmlValue)
 xbox_prices <- xpathSApply(hh,'//*[@class="xbox_main_price"]',xmlValue)
+ps_prices <- gsub("PS: ","",ps_prices)
+xbox_prices <- gsub("XB: ","",xbox_prices)
+#K x 100 and M x 1000
+ps_prices = handlePrices(ps_prices)
+xbox_prices = handlePrices(xbox_prices)
+prices <- (as.numeric(ps_prices) + as.numeric(xbox_prices))/2
+
 
 #TODO: maybe an extra column with the explicit rank? 
 #merge everything into 1 dataframe
@@ -34,7 +58,7 @@ popularPlayers <- data.frame("name" = names,
                              "country" = countrypics,
                              "club" = clubpics,
                              "position" = positions,
-                             "price" = ps_prices)
+                             "price" = prices)
 
 popularity <- data.frame("name" = popularPlayers$name,
                          "rating"=popularPlayers$rating,

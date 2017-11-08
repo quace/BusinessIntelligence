@@ -2,9 +2,18 @@
 
 POSidebarPanel <-  sidebarPanel(
   #  helpText("Select a club"),
-  selectInput("selectclubstats",label=h3("Select a club"),
-              choices = list("Show all clubs" = 1, "Club 2" = 2, "Club 3" = 3),
-              selected = 1)
+  selectInput("POsearchfunction",label=h3("Search by"),
+              choices = list("Player Name"=1,"Club"=2,"Attribute"=3)),
+              conditionalPanel(condition="input.POsearchfunction == 1",
+                               textInput("playername",label="",value="Enter player name...")),
+              conditionalPanel(condition="input.POsearchfunction == 2",
+                               textInput("clubname",label="",value="Enter club name...")),
+              conditionalPanel(condition="input.POsearchfunction == 3",
+                               sliderInput("attributeoverallrating",label="Overall Rating",min=0,max=100,value=c(0,100)),
+                               sliderInput("attributepotential",label="Potential",min=0,max=100,value=c(0,100)),
+                              sliderInput("attributeprice",label="Price (in k)",min=0,max=500,value=c(0,500)))
+  
+              
 )
 
 POMainPanel <-  mainPanel(
