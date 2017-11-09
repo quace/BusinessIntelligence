@@ -13,7 +13,7 @@ library(DT)
 #source("scrapers/scrapers.R")
 
 # Source helpers ----
-source("helpers/helpers.R")
+#source("helpers/helpers.R")
 
 # User interface ----
 source("UI/UI.R")

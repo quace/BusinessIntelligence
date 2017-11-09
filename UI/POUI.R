@@ -19,6 +19,6 @@ POSidebarPanel <-  sidebarPanel(
 )
 
 POMainPanel <-  mainPanel(
- # DT::dataTableOutput("playerstatstable")
-  tableOutput("values")
+  DT::dataTableOutput("playerstatstable")
+ # tableOutput("values")
 )

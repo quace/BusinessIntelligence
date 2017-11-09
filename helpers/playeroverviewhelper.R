@@ -39,3 +39,18 @@ matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_pla
 
 #theme_hc(bgcolor = "darkunica") +
  # scale_fill_hc("darkunica")"
+
+
+
+#########################
+#SEARCH FUNCTION#
+#########################
+getPOTablePlayerName <- function(playername){
+  return (playerStats)
+}
+getPOTableClub <- function(clubname){
+  return (playerStats)  
+}
+getPOTableAttributes <- function(slidervalues){
+  return (playerStats)
+}
