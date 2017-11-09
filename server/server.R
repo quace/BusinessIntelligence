@@ -6,6 +6,21 @@ server <- function(input, output) {
   })
   
   
+  POsliderValues <- reactive({
+    data.frame(
+      Name=c("attributeoverallrating",
+             "attributepotential",
+             "attributeprice"),
+      Value = as.character(c(input$attributeoverallrating,
+                             input$attributepotential,
+                             input$attributeprice)),
+      stringsAsFactors=FALSE
+    )
+  })
+  
+  output$values <- renderTable({
+    POsliderValues()
+  })
   
   #######################
   #BRM

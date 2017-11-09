@@ -5,9 +5,11 @@ POSidebarPanel <-  sidebarPanel(
   selectInput("POsearchfunction",label=h3("Search by"),
               choices = list("Player Name"=1,"Club"=2,"Attribute"=3)),
               conditionalPanel(condition="input.POsearchfunction == 1",
-                               textInput("playername",label="",value="Enter player name...")),
+                               textInput("playername",label="",value="Enter player name..."),
+                               actionButton("searchPlayerName",label="Enter")),
               conditionalPanel(condition="input.POsearchfunction == 2",
-                               textInput("clubname",label="",value="Enter club name...")),
+                               textInput("clubname",label="",value="Enter club name..."),
+                               actionButton("searchClubName",label="Enter")),
               conditionalPanel(condition="input.POsearchfunction == 3",
                                sliderInput("attributeoverallrating",label="Overall Rating",min=0,max=100,value=c(0,100)),
                                sliderInput("attributepotential",label="Potential",min=0,max=100,value=c(0,100)),
@@ -17,5 +19,6 @@ POSidebarPanel <-  sidebarPanel(
 )
 
 POMainPanel <-  mainPanel(
-  DT::dataTableOutput("playerstatstable")
+ # DT::dataTableOutput("playerstatstable")
+  tableOutput("values")
 )
