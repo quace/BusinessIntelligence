@@ -34,8 +34,11 @@ playerStats = newPlayerStats[indices,]
 
 
 
-#hometeams <- matches  %>% select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)%>% group_by(id,playeridggplot(aes(x=date,y=home_team_goal))+geom_col
+hometeams <- matches  %>% select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
+awayteams <- matches %>% select(id, date, away_team_api_id, away_team_goal,away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
 matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
 
 #theme_hc(bgcolor = "darkunica") +
  # scale_fill_hc("darkunica")"
@@ -46,10 +49,11 @@ matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_pla
 #SEARCH FUNCTION#
 #########################
 getPOTablePlayerName <- function(playername){
-  return (playerStats)
+  return (filter(playerStats,name==playername))
 }
 getPOTableClub <- function(clubname){
-  return (playerStats)  
+  
+  return (filter(hometeams,name))  
 }
 getPOTableAttributes <- function(slidervalues){
   return (playerStats)

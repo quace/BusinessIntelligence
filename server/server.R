@@ -66,6 +66,8 @@ server <- function(input, output) {
     POsliderValues()
   })
   
+  output$matchesByPlayer <- renderPlot({matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+})
   #######################
   #BRM
   output$popularitytable = DT::renderDataTable({popularity})
