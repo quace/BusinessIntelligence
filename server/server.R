@@ -40,10 +40,22 @@ server <- function(input, output) {
   #search attributes using slider values
   POsliderValues <- reactive({
     data.frame(
-      Name=c("overallrating",
+      Name=c("pace",
+             "shooting",
+             "passing",
+             "agility",
+             "defending",
+             "physicality",
+             "overallrating",
              "potential",
              "price"),
-      Value = as.character(c(input$attributeoverallrating,
+      Value = as.character(c(input$pace,
+                             input$shooting,
+                             input$passing,
+                             input$agility,
+                             input$defending,
+                             input$physicality,
+                            input$attributeoverallrating,
                              input$attributepotential,
                              input$attributeprice)),
       stringsAsFactors=FALSE

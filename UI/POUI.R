@@ -11,6 +11,13 @@ POSidebarPanel <-  sidebarPanel(
                                textInput("clubname",label="",value="Enter club name..."),
                                actionButton("searchClubName",label="Enter")),
               conditionalPanel(condition="input.POsearchfunction == 3",
+                               sliderInput("attributepace",label="Pace",min=0,max=100,value=c(0,100)),
+                              
+                               sliderInput("attributeshooting",label="Shooting",min=0,max=100,value=c(0,100)),
+                               sliderInput("attributepassing",label="Passing",min=0,max=100,value=c(0,100)),
+                               sliderInput("attributeagility",label="Agility",min=0,max=100,value=c(0,100)),
+                               sliderInput("attributedefending",label="Defending",min=0,max=100,value=c(0,100)),
+                               sliderInput("attributephysicality",label="Physicality",min=0,max=100,value=c(0,100)),
                                sliderInput("attributeoverallrating",label="Overall Rating",min=0,max=100,value=c(0,100)),
                                sliderInput("attributepotential",label="Potential",min=0,max=100,value=c(0,100)),
                               sliderInput("attributeprice",label="Price (in k)",min=0,max=500,value=c(0,500)))
@@ -20,5 +27,6 @@ POSidebarPanel <-  sidebarPanel(
 
 POMainPanel <-  mainPanel(
   DT::dataTableOutput("playerstatstable")
+# plotOutput("matchesByPlayer")
  # tableOutput("values")
 )
