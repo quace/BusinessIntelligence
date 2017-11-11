@@ -1,6 +1,7 @@
 #import separate UI pages
 source("UI/BRMUI.R")
 source("UI/POUI.R")
+source("UI/TUI.R")
 
 ui <- navbarPage("Soccer Analysis",
                  tabPanel("Player Overview",
@@ -19,7 +20,11 @@ ui <- navbarPage("Soccer Analysis",
                            
                             mainPanel = BRMMainPanel
                           )),
-                 tabPanel("Twitter", sidebarLayout(sidebarPanel(textOutput("currentTime"),textInput(inputId ="searchterm", value = "Iniesta", label = "Search: ", placeholder = "Enter what you're searching for"), textOutput("tweetssel")), mainPanel(plotlyOutput("twittergraph"),verbatimTextOutput("event")))),
+                 tabPanel("Twitter", 
+                          sidebarLayout(
+                            sidebarPanel = TwitterSidebarPanel,
+                             
+                            mainPanel = TwitterMainPanel)),
                  inverse=TRUE
 )
   

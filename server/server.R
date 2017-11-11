@@ -33,10 +33,10 @@ server <- function(input, output, session) {
   
   
   #search on playername
-  newPlayerNameSearch <- eventReactive(input$searchPlayerName,
-                                       {
+ # newPlayerNameSearch <- eventReactive(input$searchPlayerName,
+  #                                     {
                                          
-                                       })
+   #                                    })
   #search attributes using slider values
   POsliderValues <- reactive({
     data.frame(
@@ -93,24 +93,36 @@ server <- function(input, output, session) {
     output$currentTime <- renderText({invalidateLater(1000, session) 
       paste("Current time is: ",Sys.time())})
     
-    tweetssearchterm <- renderText({ input$searchTerm })
     
-    tweets <- searchTwitter(tweetssearchterm, n=1000, lang="en", since="2014-08-20")
+    #function that returns a ggplot of twitter data
+    getTwitterGraph <- function(){
+      tweetssearchterm <- input$TwitterSearchterm
+      tweets <- searchTwitter(tweetssearchterm, n=1000, lang="en", since="2014-08-20")
+      tweets.df <- twListToDF(tweets)
+      
+      g <- ggplot(data = tweets.df, aes(x = timestamp)) +
+        geom_histogram(aes(fill = ..count..)) +
+        theme(legend.position = "none") +
+        xlab("Time") + ylab("Number of tweets") + 
+        scale_fill_gradient(low = "midnightblue", high = "aquamarine4")
+      
+      return(g)
+      
+    }
     
-    tweets.df <- twListToDF(tweets)
-    
-    sentimentOfTweet <- get_nrc_sentiment(tweets.df$text)
-    
-    g <- ggplot(data = tweets.df, aes(x = timestamp)) +
-      geom_histogram(aes(fill = ..count..)) +
-      theme(legend.position = "none") +
-      xlab("Time") + ylab("Number of tweets") + 
-      scale_fill_gradient(low = "midnightblue", high = "aquamarine4")
-    
-    output$twittergraph <- ggplotly(g, tooltip=c("Timestamp","Count"))
+    #outputs
+    output$twittergraph <- renderPlot({ggplotly(getTwitterGraph(), tooltip=c("Timestamp","Count"))})
+   
     
     output$event <- renderPrint({
       d <- event_data("plotly_hover")
       if (is.null(d)) "Hover on a point!" else d
     })
+    
+    
+    
+    #sentimentOfTweet <- get_nrc_sentiment(tweets.df$text)
+    
+    
+    
 }
