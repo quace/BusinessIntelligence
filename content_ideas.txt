@@ -6,12 +6,12 @@ Player Overview
         -speler naam
         -club
         -attributen: neem het gemiddelde van de verschillende cijfers die we hebben
-            -lopen
-            -schieten
-            -passen
-            -behendigheid
-            -defensive
-            -fysiek
+            -lopen -> pace
+            -schieten -> shooting 
+            -passen -> passing
+            -behendigheid -> agility
+            -defensive -> defending
+            -fysiek -> physicality
             -overal rating 
             -potential
             -prijs
