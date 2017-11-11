@@ -10,7 +10,6 @@ ui <- navbarPage("Soccer Analysis",
                           )
                  ),
                  
-                 
                  tabPanel("Match Advise"),
                  tabPanel("Loan/Sell"),
                  tabPanel("Ideal Team"),
@@ -20,8 +19,8 @@ ui <- navbarPage("Soccer Analysis",
                            
                             mainPanel = BRMMainPanel
                           )),
+                 tabPanel("Twitter", sidebarLayout(sidebarPanel(textOutput("currentTime"),textInput(inputId ="searchterm", value = "Iniesta", label = "Search: ", placeholder = "Enter what you're searching for"), textOutput("tweetssel")), mainPanel(plotlyOutput("twittergraph"),verbatimTextOutput("event")))),
                  inverse=TRUE
-                 
 )
   
   
