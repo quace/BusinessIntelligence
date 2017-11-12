@@ -53,7 +53,7 @@ server <- function(input, output, session) {
                              input$agility,
                              input$defending,
                              input$physicality,
-                            input$attributeoverallrating,
+                             input$attributeoverallrating,
                              input$attributepotential,
                              input$attributeprice)),
       stringsAsFactors=FALSE

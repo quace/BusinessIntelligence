@@ -16,14 +16,12 @@ library(base64enc) # fix for twitter oauth in shinyapps.io
 library(SnowballC) # fix for stemming issue in tm
 
 # Load twitter authorization
-if(runOnline){
   secrets <- fromJSON(file='scrapers/twitter_secrets.json.nogit')
   
   setup_twitter_oauth(secrets$api_key,
                       secrets$api_secret,
                       secrets$access_token,
                       secrets$access_token_secret)
-}
 
 # Grab tweets
 getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
