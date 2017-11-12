@@ -15,8 +15,6 @@ library(rbokeh)
 library(base64enc) # fix for twitter oauth in shinyapps.io
 library(SnowballC) # fix for stemming issue in tm
 
-runOnline = T
-
 # Load twitter authorization
 if(runOnline){
   secrets <- fromJSON(file='scrapers/twitter_secrets.json.nogit')
@@ -28,11 +26,10 @@ if(runOnline){
 }
 
 # Grab tweets
-getTweets <- function(searchString, numTweets, rt_remove, isUser){
+getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
   
-  if(runOnline & !isUser){
-    st <- searchTwitter(searchString, n=numTweets, resultType = 'recent', lang = 'en')
-    
+    print('Searching for tweets...')
+    st <- searchTwitter(searchString, n=numTweets, lang = 'en')
     statuses <- data.frame(text=sapply(st, function(x) x$getText()),
                            user=sapply(st, function(x) x$getScreenName()),
                            RT=sapply(st, function(x) x$isRetweet),
@@ -40,35 +37,12 @@ getTweets <- function(searchString, numTweets, rt_remove, isUser){
                            longitude=sapply(st, function(x) as.numeric(x$longitude[1])),
                            time=sapply(st, function(x) format(x$created, format='%F %T'))
     )
-  }
-  
-  if(isUser){
-    if(numTweets > 3200){numTweets<-3200}
-    st <- userTimeline(searchString, n=numTweets, includeRts=!rt_remove)
-    statuses <- data.frame(text=sapply(st, function(x) x$getText()),
-                           user=sapply(st, function(x) x$getScreenName()),
-                           RT=sapply(st, function(x) x$isRetweet),
-                           time=sapply(st, function(x) format(x$created, format='%F %T'))
-    )
-  }
-  
-  if(!runOnline){
-    files <- list.files('data','tweets_')
-    searchstring <- 'politics'
-    for(i in 1:length(files)) {
-      selectedfile <- '/Users/strakul/software/r/shiny_twitter/data/tweets_politics_3970_2016-02-28.Rda'
-      statuses <- readRDS(file=selectedfile)
-    }
-  }
-  
   if(rt_remove){
-    print('Removing Retweets')
+    print('Removing Retweets...')
     statuses <-
       statuses %>%
       filter(!RT)
   }
-  
-  
   return(statuses)
 }
 
