@@ -1,4 +1,13 @@
 # Server logic
+getMatchesByPlayer <- function(playername){
+  test <- matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  matchesOfPlayerX <- matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(player_name == playername) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  matchesOfPlayerX <- test
+  return(matchesOfPlayerX)
+}
+
+
+
 server <- function(input, output, session) {
   #PO
   getPODisplayTable <- function(){
@@ -66,8 +75,11 @@ server <- function(input, output, session) {
     POsliderValues()
   })
   
-  output$matchesByPlayer <- renderPlot({matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
-})
+  
+  
+  output$matchesByPlayer <- renderPlot({getMatchesByPlayer(input$playername)})
+
+  
   #######################
   #BRM
   output$popularitytable = DT::renderDataTable({popularity})

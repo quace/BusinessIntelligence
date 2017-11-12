@@ -52,8 +52,9 @@ getPOTablePlayerName <- function(playername){
   return (filter(playerStats,name==playername))
 }
 getPOTableClub <- function(clubname){
-  
-  return (filter(hometeams,name))  
+  #TODO: fix this
+  clubmembers <- filter(hometeams,team_long_name==clubname)
+  return (clubmembers)  
 }
 getPOTableAttributes <- function(slidervalues){
   return (playerStats)
