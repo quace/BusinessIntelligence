@@ -54,18 +54,7 @@ server <- function(input, output, session) {
                   rot.per=0.1, use.r.layout=F)
   })
   
-  output$tweetCount  <- renderText({
-    df <- statuses()
-    if(input$isUser){
-      paste("Number of Tweets Found: ", as.character(nrow(statuses())),
-            "\nUser: ",as.character(df$user[1]),
-            "\nDescription: ",as.character(getUser(df$user[1])$description)
-      )
-    }else{
-      paste("Number of Tweets Found: ", as.character(nrow(df)))
-    }
-    
-  })
+
   
   output$sentiment <- renderPlot({
     v <- sentiments()

@@ -33,8 +33,6 @@ server <- function(input, output, session) {
     
   }
   
-  
-  
     output$playerstatstable <- DT::renderDataTable({
     #playerStats
     getPODisplayTable()
@@ -75,6 +73,7 @@ server <- function(input, output, session) {
     POsliderValues()
   })
   
+
   
   
   output$matchesByPlayer <- renderPlot({getMatchesByPlayer(input$playername)})
@@ -94,47 +93,35 @@ server <- function(input, output, session) {
   
   ######################
   ######################
-    secrets <- rjson::fromJSON(file='scrapers/twitter_secrets.json.nogit')
-    
-    setup_twitter_oauth(secrets$api_key,
-                        secrets$api_secret,
-                        secrets$access_token,
-                        secrets$access_token_secret)
+  
+  
+  updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = player$player_name)
+  
+    source("APIs/GlobalTwitter.R")
+
     token <- get("oauth_token", twitteR:::oauth_cache) #Save the credentials info
     token$cache()
+    
     output$currentTime <- renderText({invalidateLater(1000, session) 
-      paste("Current time is: ",Sys.time())})
+    paste("Current time is: ",Sys.time(), "!Beware: Twitter doesn't return tweets older than a week through the search api.")})
     
-    
-    #function that returns a ggplot of twitter data
-    getTwitterGraph <- function(){
-      tweetssearchterm <- input$TwitterSearchterm
-      tweets <- searchTwitter(tweetssearchterm, n=1000, lang="en", since="2014-08-20")
-      tweets.df <- twListToDF(tweets)
+      tweets <- reactive({
+        tweets <- getTweets(input$twitterSearchterm, n = 100, T) #tweets = df
+        return(tweets)
+      })
       
-      g <- ggplot(data = tweets.df, aes(x = timestamp)) +
-        geom_histogram(aes(fill = ..count..)) +
-        theme(legend.position = "none") +
-        xlab("Time") + ylab("Number of tweets") + 
-        scale_fill_gradient(low = "midnightblue", high = "aquamarine4")
+      output$tweetCount  <- renderText({
+        df <- tweets()
+        paste("Number of Tweets Found: ", as.character(nrow(df)))
+      })
       
-      return(g)
+      textdata <- reactive({
+        textdata <- getTextData(tweets())
+        return(textdata)
+      })
       
-    }
-    
-    #outputs
-    output$twittergraph <- renderPlot({ggplotly(getTwitterGraph(), tooltip=c("Timestamp","Count"))})
-   
-    
-    output$event <- renderPrint({
-      d <- event_data("plotly_hover")
-      if (is.null(d)) "Hover on a point!" else d
+    output$table <- renderTable({
+      tweets()
     })
-    
-    
-    
-    #sentimentOfTweet <- get_nrc_sentiment(tweets.df$text)
-    
-    
     
 }

@@ -1,14 +1,8 @@
 #Twitter UI
 TwitterSidebarPanel <-  sidebarPanel(
             textOutput("currentTime"),
-             textInput("TwitterSearchterm", 
-                       value = "Iniesta", 
-                       #value = "",
-                       label = "Search: ", 
-                       placeholder = "Enter what you're searching for"),
-             textOutput("tweetssel"))
-
-
-TwitterMainPanel <-  mainPanel(plotlyOutput("twittergraph"),
-          
-          verbatimTextOutput("event"))
+            selectInput("twitterSearchterm", "Search:", choices = c()),
+            numericInput("numerOfTweets", label = "Max number of tweets", value = 100),hr(),
+            textOutput("tweetCount"))
+      
+TwitterMainPanel <-  mainPanel(tableOutput("table"), plotOutput("wordcloud"))
