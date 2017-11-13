@@ -6,4 +6,4 @@ getURLS <- function() {
   }
   return(URLS)
 }
-Reviews<-ContentScraper(Url = URLS(), CssPatterns =c(".entry-title","#comments p"), ManyPerPattern = TRUE)
+Reviews<-ContentScraper(Url = getURLS(), XpathPatterns =c("//*/div[@id='rank_number']//span[@class='symbol']"), ManyPerPattern = TRUE)
