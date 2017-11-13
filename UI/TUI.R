@@ -4,7 +4,6 @@ TwitterSidebarPanel <-  sidebarPanel(
             selectInput("twitterSearchterm", "Search:", choices = c()),
             numericInput("numberOfTweets", label = "Max number of tweets", value = 100),
             checkboxInput("retweetsBool", "No retweets?", value = FALSE, width = NULL), hr(),
-            textOutput("tweetCount"),
-            tableOutput("tablesentiments"))
+            textOutput("tweetCount"))
       
-TwitterMainPanel <-  mainPanel( plotOutput("sentimentTable"), tableOutput("table"))
+TwitterMainPanel <-  mainPanel( h3("Twitter"),plotOutput("sentimentTable"),tableOutput("tablesentiments"), h3("Facebook"))
