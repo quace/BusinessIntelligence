@@ -16,6 +16,7 @@ library(scales)
 
 #load the database
 source("loaddata/load_soccer_data.R")
+source("loaddata/load_full_data.R")
 
 #scrape data
 source("scrapers/scrapers.R")

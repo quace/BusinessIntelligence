@@ -27,8 +27,8 @@ library(SnowballC) # fix for stemming issue in tm
 getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
   
     print('Searching for tweets...')
-    st <- searchTwitter(searchString, n=numTweets, lang = 'en')
-    statuses <- data.frame(text=sapply(st, function(x) x$getText()),
+    st <- searchTwitter(searchString, n=numTweets, lang = 'en', since = "2010-01-01", retryOnRateLimit = numTweets/2)
+    tweets <- data.frame(text=sapply(st, function(x) x$getText()),
                            user=sapply(st, function(x) x$getScreenName()),
                            RT=sapply(st, function(x) x$isRetweet),
                            latitude=sapply(st, function(x) as.numeric(x$latitude[1])),
@@ -37,17 +37,19 @@ getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
     )
   if(rt_remove){
     print('Removing Retweets...')
-    statuses <-
-      statuses %>%
+    tweets <-
+      tweets %>%
       filter(!RT)
   }
-  return(statuses)
+    
+  return(tweets)
 }
 
-# Grab text data
-getTextData <- function(statuses) {
+# Clean text data
+cleanTweets <- function(tweets) {
+  tweets$text <- sapply(tweets$text,function(row) iconv(row, "latin1", "ASCII", sub="")) #remove emoji's
   # Gather corpus
-  textdata <- Corpus(VectorSource(statuses$text))
+  textdata <- Corpus(VectorSource(tweets$text))
   textdata <- 
     textdata %>%
     tm_map(removeWords, stopwords("english")) %>%
@@ -59,6 +61,8 @@ getTextData <- function(statuses) {
     tm_map(removeNumbers) %>%
     tm_map(stemDocument) %>%
     tm_map(stripWhitespace)
+  tweets$text <- textdata
+  return(tweets)
 }
 
 # Get sentiment data
@@ -70,33 +74,4 @@ getSentiments <- function(textdata){
   sentiments <-
     sentiments %>%
     mutate(positivity = positive - negative)
-}
-
-# Do the PCA analysis
-doPCA <- function(textdata, statuses, sentiments){
-  dtm <- DocumentTermMatrix(textdata)
-  dtm <- as.matrix(dtm) #inspect(dtm)
-  
-  words <- data.frame(term = colnames(dtm))
-  words$count <- colSums(dtm)
-  
-  words <-
-    words %>%
-    mutate(freq = count/nrow(statuses)) %>%
-    arrange(desc(count))
-  
-  tweets <- as.data.frame(dtm)
-  ind <- data.frame('id'=seq.int(nrow(tweets)))
-  tweets <- cbind(ind, tweets)
-  
-  # Eliminate very common terms (like the search term)
-  numToCut <- max(1, sum(words$freq>0.9))
-  words_100 <- as.character(words[1+numToCut:100+numToCut,'term'])
-  tweets <- tweets[,c('id',words_100)]
-  
-  trans <- preProcess(tweets[,2:ncol(tweets)], method=c("pca"), thresh = 0.95)
-  pca <- predict(trans, tweets[,2:ncol(tweets)])
-  statuses <- cbind(statuses, pca[,1:5], sentiments)
-  
-  return(list("statuses"=statuses, "pca"=trans))
 }

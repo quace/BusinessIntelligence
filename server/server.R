@@ -1,4 +1,11 @@
 # Server logic
+getMatchesByPlayer <- function(playername){
+  test <- matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  matchesOfPlayerX <- matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(player_name == playername) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  matchesOfPlayerX <- test
+  return(matchesOfPlayerX)
+}
+
 server <- function(input, output, session) {
   #PO
   getPODisplayTable <- function(){
@@ -37,6 +44,7 @@ server <- function(input, output, session) {
    #                                    })
   #search attributes using slider values
   POsliderValues <- reactive({
+     HEAD
     data.frame(
       Name=c("pace",
              "shooting",
@@ -58,14 +66,43 @@ server <- function(input, output, session) {
                              input$attributeprice)),
       stringsAsFactors=FALSE
     )
+
+    slidervalues <- data.frame("overallratingmin" = input$attributeoverallrating[1],
+                            "overallratingmax"=input$attributeoverallrating[2],
+                            "pacemin"=input$attributepace[1],
+                            "pacemax"=input$attributepace[2],
+             "shootingmin"=input$attributeshooting[1],
+             "shootingmax"=input$attributeshooting[2],
+             "passingmin"=input$attributepassing[1],
+             "passingmax"=input$attributepassing[2],
+             "agilitymin"=input$attributeagility[1],
+             "agilitymax"=input$attributeagility[2],
+             "defendingmin"=input$attributedefending[1],
+             "defendingmax"=input$attributedefending[2],
+             "physicalitymin"=input$attributephysicality[1],
+             "physicalitymax"=input$attributephysicality[2],
+             "overallratingmin"=input$attributeoverallrating[1],
+             "overallratingmax"=input$attributeoverallrating[2],
+             "potentialmin"=input$attributepotential[1],
+             "potentialmax"=input$attributepotential[2],
+             "pricemin"=input$attributeprice[1],
+             "pricemax"=input$attributeprice[2])
+      
+    
+    return (slidervalues)
+
   })
   
   output$values <- renderTable({
     POsliderValues()
   })
   
-  output$matchesByPlayer <- renderPlot({matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(player_name == input$playername) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
-})
+
+  
+  
+  output$matchesByPlayer <- renderPlot({getMatchesByPlayer(input$playername)})
+
+  
   #######################
   #BRM
   output$popularitytable = DT::renderDataTable({popularity})
@@ -81,7 +118,6 @@ server <- function(input, output, session) {
   ######################
   ######################
   
-  
   updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = player$player_name)
   
     source("APIs/GlobalTwitter.R")
@@ -90,25 +126,52 @@ server <- function(input, output, session) {
     token$cache()
     
     output$currentTime <- renderText({invalidateLater(1000, session) 
-    paste("Current time is: ",Sys.time(), "!Beware: Twitter doesn't return tweets older than a week through the search api.")})
+    paste("Current time is: ",Sys.time(), "Twitter doesn't return tweets older than a week through the search api.")})
     
       tweets <- reactive({
-        tweets <- getTweets(input$twitterSearchterm, n = 100, T) #tweets = df
+        tweets <- getTweets(input$twitterSearchterm, n = input$numberOfTweets, input$retweetsBool) #tweets = df
         return(tweets)
       })
       
       output$tweetCount  <- renderText({
+        withProgress(message = 'Searching tweets...', value = 0, {
         df <- tweets()
         paste("Number of Tweets Found: ", as.character(nrow(df)))
+        })
       })
       
-      textdata <- reactive({
-        textdata <- getTextData(tweets())
-        return(textdata)
+      cleantweets <- reactive({ #clean tweets for sentiment analysis
+        cleantweets <- cleanTweets(tweets())
+        return(cleantweets)
       })
       
-    output$table <- renderTable({
-      tweets()
-    })
-    
+      sentiments <- reactive({
+        sentiments <- getSentiments(cleantweets()$text)
+        sentiments <- data.frame(sentiments)
+        sentiments <- sentiments %>% summarise(anger = sum(anger),
+                                anticipation = sum(anticipation),
+                                disgust = sum(disgust),
+                                fear = sum(fear),
+                                joy = sum(joy),
+                                sadness = sum(sadness),
+                                surprise = sum(surprise),
+                                trust = sum(trust),
+                                positivity = sum(positivity))
+        sentiments <- sentiments %>% gather(emotion,score, anger:positivity)
+        sentiments$score[1] <- sentiments$score[1]/sum(sentiments$score)
+        sentiments$score[2] <- sentiments$score[2]/sum(sentiments$score)
+        sentiments$score[3] <- sentiments$score[3]/sum(sentiments$score)
+        sentiments$score[4] <- sentiments$score[4]/sum(sentiments$score)
+        sentiments$score[5] <- sentiments$score[5]/sum(sentiments$score)
+        sentiments$score[6] <- sentiments$score[6]/sum(sentiments$score)
+        sentiments$score[7] <- sentiments$score[7]/sum(sentiments$score)
+        sentiments$score[8] <- sentiments$score[8]/sum(sentiments$score)
+        sentiments$score[9] <- sentiments$score[9]/sum(sentiments$score)
+        return(sentiments)
+      })
+      
+      output$tablesentiments <- renderTable(sentiments())
+      
+      output$sentimentTable <- renderPlot({ withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})})
+      
 }
