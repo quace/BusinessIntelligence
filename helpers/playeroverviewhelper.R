@@ -117,6 +117,14 @@ filterOnPhysicality <- function(table,min,max){
   return (table) 
 }
 
+filterOnPotential <- function(table,min,max){
+  table <- table %>% mutate(Potential = as.integer((Rating/Age)*20))
+  
+  table <- filter(table,Potential <= max) %>% filter(Potential >= min) 
+  
+  return (table) 
+}
+
 getPOTableAttributes <- function(slidervalues){
   #rating
   ratingMin <- as.numeric(slidervalues$overallratingmin)
@@ -157,12 +165,13 @@ getPOTableAttributes <- function(slidervalues){
   returnTable <- filterOnDribbling(returnTable,agilitymin,agilitymax)
   returnTable <- filterOnDefending(returnTable,defendingmin,defendingmax)
   returnTable <- filterOnPhysicality(returnTable,physicalitymin,physicalitymax)
-  #TODO: potential & price
+  returnTable <- filterOnPotential(returnTable,potentialmin,potentialmax)
+  #TODO: price
   
   
   #select what to show
   #returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
-  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age,Pace,Shooting,Passing,Dribblingx,Physicality)
+  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age,Pace,Shooting,Passing,Dribblingx,Physicality,Potential)
   
   return (returnTable)
 }
