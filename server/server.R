@@ -6,8 +6,6 @@ getMatchesByPlayer <- function(playername){
   return(matchesOfPlayerX)
 }
 
-
-
 server <- function(input, output, session) {
   #PO
   getPODisplayTable <- function(){

@@ -74,32 +74,3 @@ getSentiments <- function(textdata){
     sentiments %>%
     mutate(positivity = positive - negative)
 }
-
-# Do the PCA analysis
-doPCA <- function(textdata, statuses, sentiments){
-  dtm <- DocumentTermMatrix(textdata)
-  dtm <- as.matrix(dtm) #inspect(dtm)
-  
-  words <- data.frame(term = colnames(dtm))
-  words$count <- colSums(dtm)
-  
-  words <-
-    words %>%
-    mutate(freq = count/nrow(statuses)) %>%
-    arrange(desc(count))
-  
-  tweets <- as.data.frame(dtm)
-  ind <- data.frame('id'=seq.int(nrow(tweets)))
-  tweets <- cbind(ind, tweets)
-  
-  # Eliminate very common terms (like the search term)
-  numToCut <- max(1, sum(words$freq>0.9))
-  words_100 <- as.character(words[1+numToCut:100+numToCut,'term'])
-  tweets <- tweets[,c('id',words_100)]
-  
-  trans <- preProcess(tweets[,2:ncol(tweets)], method=c("pca"), thresh = 0.95)
-  pca <- predict(trans, tweets[,2:ncol(tweets)])
-  statuses <- cbind(statuses, pca[,1:5], sentiments)
-  
-  return(list("statuses"=statuses, "pca"=trans))
-}
