@@ -1,7 +1,3 @@
-# Global setups
-
-
-
 # Load twitter authorization
   secrets <- fromJSON(file='scrapers/twitter_secrets.json.nogit')
   

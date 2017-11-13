@@ -11,21 +11,19 @@ ui <- navbarPage("Soccer Analysis",
                             mainPanel = POMainPanel
                           )
                  ),
-                 
-                 tabPanel("Match Advise"),
+                 tabPanel("Twitter", 
+                          sidebarLayout(
+                            sidebarPanel = TwitterSidebarPanel,
+                            
+                            mainPanel = TwitterMainPanel)),
+                 tabPanel("Player performance"),
                  tabPanel("Loan/Sell"),
-                 tabPanel("Ideal Team"),
                  tabPanel("Brand-related Marketing",
                           sidebarLayout(
                             sidebarPanel = BRMSidebarPanel,
                            
                             mainPanel = BRMMainPanel
                           )),
-                 tabPanel("Twitter", 
-                          sidebarLayout(
-                            sidebarPanel = TwitterSidebarPanel,
-                             
-                            mainPanel = TwitterMainPanel)),
                  inverse=TRUE
 )
   
