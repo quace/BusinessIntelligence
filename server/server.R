@@ -96,8 +96,6 @@ server <- function(input, output, session) {
   ######################
   ######################
   
- #return()
-  
   updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = player$player_name)
   
     source("APIs/GlobalTwitter.R")
@@ -109,7 +107,7 @@ server <- function(input, output, session) {
     paste("Current time is: ",Sys.time(), "!Beware: Twitter doesn't return tweets older than a week through the search api.")})
     
       tweets <- reactive({
-        tweets <- getTweets(input$twitterSearchterm, n = 100, T) #tweets = df
+        tweets <- getTweets(input$twitterSearchterm, n = input$numberOfTweets, input$retweetsBool) #tweets = df
         return(tweets)
       })
       
@@ -118,13 +116,35 @@ server <- function(input, output, session) {
         paste("Number of Tweets Found: ", as.character(nrow(df)))
       })
       
-      textdata <- reactive({
-        textdata <- getTextData(tweets())
-        return(textdata)
+      output$table <- renderTable({
+        tweets()
       })
       
-    output$table <- renderTable({
-      tweets()
-    })
-    
+      cleantweets <- reactive({ #clean tweets for sentiment analysis
+        cleantweets <- cleanTweets(tweets())
+        return(cleantweets)
+      })
+      
+      sentiments <- reactive({
+        sentiments <- getSentiments(cleantweets()$text)
+        sentiments <- data.frame(sentiments)
+        sentiments <- sentiments %>% summarise(anger = sum(anger),
+                                anticipation = sum(anticipation),
+                                disgust = sum(disgust),
+                                fear = sum(fear),
+                                joy = sum(joy),
+                                sadness = sum(sadness),
+                                surprise = sum(surprise),
+                                trust = sum(trust),
+                                negative = sum(negative),
+                                positive = sum(negative),
+                                positivity = sum(positivity))
+        sentiments <- sentiments %>% gather(emotion,score, anger:positivity)
+        return(sentiments)
+      })
+      
+      output$tablesentiments <- renderTable(sentiments())
+      
+      output$sentimentTable <- renderPlot({ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})
+      
 }

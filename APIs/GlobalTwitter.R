@@ -28,8 +28,8 @@ library(SnowballC) # fix for stemming issue in tm
 getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
   
     print('Searching for tweets...')
-    st <- searchTwitter(searchString, n=numTweets, lang = 'en')
-    statuses <- data.frame(text=sapply(st, function(x) x$getText()),
+    st <- searchTwitter(searchString, n=numTweets, lang = 'en', since = "2010-01-01", retryOnRateLimit = numTweets/2)
+    tweets <- data.frame(text=sapply(st, function(x) x$getText()),
                            user=sapply(st, function(x) x$getScreenName()),
                            RT=sapply(st, function(x) x$isRetweet),
                            latitude=sapply(st, function(x) as.numeric(x$latitude[1])),
@@ -38,17 +38,17 @@ getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
     )
   if(rt_remove){
     print('Removing Retweets...')
-    statuses <-
-      statuses %>%
+    tweets <-
+      tweets %>%
       filter(!RT)
   }
-  return(statuses)
+  return(tweets)
 }
 
-# Grab text data
-getTextData <- function(statuses) {
+# Clean text data
+cleanTweets <- function(tweets) {
   # Gather corpus
-  textdata <- Corpus(VectorSource(statuses$text))
+  textdata <- Corpus(VectorSource(tweets$text))
   textdata <- 
     textdata %>%
     tm_map(removeWords, stopwords("english")) %>%
@@ -60,6 +60,8 @@ getTextData <- function(statuses) {
     tm_map(removeNumbers) %>%
     tm_map(stemDocument) %>%
     tm_map(stripWhitespace)
+  tweets$text <- textdata
+  return(tweets)
 }
 
 # Get sentiment data
