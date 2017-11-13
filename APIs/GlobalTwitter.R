@@ -7,7 +7,7 @@
                       secrets$access_token_secret)
 
 # Grab tweets
-getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
+getTweets <- function(searchString, numTweets, rt_remove){
   
     print('Searching for tweets...')
     st <- searchTwitter(searchString, n=numTweets, lang = 'en', since = "2010-01-01", retryOnRateLimit = numTweets/2)

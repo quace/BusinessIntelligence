@@ -17,7 +17,6 @@ server <- function(input, output, session) {
   updateSelectInput(session, "playername", "Search player: ", choices = player$player_name)
   updateSelectInput(session, "clubname", "Search club: ", choices = fullData$Club)
   
-  
   #PO
   getPODisplayTable <- function(){
     #Player name
@@ -86,6 +85,32 @@ server <- function(input, output, session) {
 
   output$homeMatchesByPlayer <- renderPlot({getHomeMatchesByPlayer(input$playername)})
   output$awayMatchesByPlayer <- renderPlot({getAwayMatchesByPlayer(input$playername)})
+  #######################
+  #######################
+  
+  #personal performance
+  
+  ######################
+  ######################
+  
+  updateSelectInput(session, "playernameperf", "Search player: ", choices = player$player_name)
+  
+  output$personalperformance <- renderPlot({
+    
+    selectedplayer <- player %>% filter(player_name == input$playernameperf)
+    api_id <- selectedplayer$player_api_id
+    selectedPerf <- input$performanceSel
+    
+    plot <- player_attributes %>%
+      filter(player_api_id == api_id) %>%
+      ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + ylim(0, 100)
+    return(plot)
+  })
+  
+  
+  
+  
+  
   
   #######################
   #BRM

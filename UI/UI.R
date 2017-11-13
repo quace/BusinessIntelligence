@@ -16,14 +16,15 @@ ui <- navbarPage("Soccer Analysis",
                             sidebarPanel = TwitterSidebarPanel,
                             
                             mainPanel = TwitterMainPanel)),
-                 tabPanel("Player performance"),
-                 tabPanel("Loan/Sell"),
+                 tabPanel("Player performance", sidebarLayout( sidebarPanel(selectInput("playernameperf", label = "Select player:",choices = c(),selected=NULL),selectInput("performanceSel", label = "Select performance indicator:",choices = c("overall_rating","potential"),selected=NULL)), mainPanel(plotOutput("personalperformance")) )),
+
                  tabPanel("Brand-related Marketing",
                           sidebarLayout(
                             sidebarPanel = BRMSidebarPanel,
                            
                             mainPanel = BRMMainPanel
                           )),
+                 tabPanel("Loan/Sell"),
                  inverse=TRUE
 )
   
