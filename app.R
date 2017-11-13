@@ -13,6 +13,7 @@ library(syuzhet) #Word-emotion algorithm
 library(wordcloud)
 library(plotly)
 library(scales)
+library(shinythemes)
 
 #load the database
 source("loaddata/load_soccer_data.R")
