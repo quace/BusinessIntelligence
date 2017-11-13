@@ -46,27 +46,29 @@ server <- function(input, output, session) {
    #                                    })
   #search attributes using slider values
   POsliderValues <- reactive({
-    data.frame(
-      Name=c("pace",
-             "shooting",
-             "passing",
-             "agility",
-             "defending",
-             "physicality",
-             "overallrating",
-             "potential",
-             "price"),
-      Value = as.character(c(input$pace,
-                             input$shooting,
-                             input$passing,
-                             input$agility,
-                             input$defending,
-                             input$physicality,
-                            input$attributeoverallrating,
-                             input$attributepotential,
-                             input$attributeprice)),
-      stringsAsFactors=FALSE
-    )
+    slidervalues <- data.frame("overallratingmin" = input$attributeoverallrating[1],
+                            "overallratingmax"=input$attributeoverallrating[2],
+                            "pacemin"=input$attributepace[1],
+                            "pacemax"=input$attributepace[2],
+             "shootingmin"=input$attributeshooting[1],
+             "shootingmax"=input$attributeshooting[2],
+             "passingmin"=input$attributepassing[1],
+             "passingmax"=input$attributepassing[2],
+             "agilitymin"=input$attributeagility[1],
+             "agilitymax"=input$attributeagility[2],
+             "defendingmin"=input$attributedefending[1],
+             "defendingmax"=input$attributedefending[2],
+             "physicalitymin"=input$attributephysicality[1],
+             "physicalitymax"=input$attributephysicality[2],
+             "overallratingmin"=input$attributeoverallrating[1],
+             "overallratingmax"=input$attributeoverallrating[2],
+             "potentialmin"=input$attributepotential[1],
+             "potentialmax"=input$attributepotential[2],
+             "pricemin"=input$attributeprice[1],
+             "pricemax"=input$attributeprice[2])
+      
+    
+    return (slidervalues)
   })
   
   output$values <- renderTable({
@@ -94,6 +96,7 @@ server <- function(input, output, session) {
   ######################
   ######################
   
+ #return()
   
   updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = player$player_name)
   

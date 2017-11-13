@@ -49,13 +49,27 @@ matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_pla
 #SEARCH FUNCTION#
 #########################
 getPOTablePlayerName <- function(playername){
-  return (filter(playerStats,name==playername))
+  #old way
+  returnTable <- filter(playerStats,name==playername)
+  #new way
+  returnTable <- filter(fullData,Name==playername) %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+ 
+  return (returnTable)
 }
 getPOTableClub <- function(clubname){
   #TODO: fix this
-  clubmembers <- filter(hometeams,team_long_name==clubname)
-  return (clubmembers)  
+  #clubmembers <- filter(hometeams,team_long_name==clubname)
+  
+  #new way
+  returnTable <- filter(fullData,Club==clubname)%>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  return (returnTable)  
 }
 getPOTableAttributes <- function(slidervalues){
-  return (playerStats)
+  ratingMin <- as.numeric(slidervalues$overallratingmin)
+  ratingMax <- as.numeric(slidervalues$overallratingmax)
+  
+  
+  returnTable <- filter(fullData,Rating <= ratingMax) %>% filter(Rating >= ratingMin) %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  
+  return (returnTable)
 }
