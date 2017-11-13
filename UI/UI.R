@@ -4,6 +4,7 @@ source("UI/POUI.R")
 source("UI/TUI.R")
 
 ui <- navbarPage("Soccer Analysis",
+                 theme = shinythemes::shinytheme("flatly"),
                  tabPanel("Player Overview",
                           sidebarLayout(
                             sidebarPanel = POSidebarPanel,

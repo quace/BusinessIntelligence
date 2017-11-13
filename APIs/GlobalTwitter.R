@@ -10,7 +10,6 @@
                       secrets$access_token,
                       secrets$access_token_secret)
 
-
 # Grab tweets
 getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
   
@@ -29,11 +28,13 @@ getTweets <- function(searchString, numTweets, rt_remove, fromDate, toDate){
       tweets %>%
       filter(!RT)
   }
+    
   return(tweets)
 }
 
 # Clean text data
 cleanTweets <- function(tweets) {
+  tweets$text <- sapply(tweets$text,function(row) iconv(row, "latin1", "ASCII", sub="")) #remove emoji's
   # Gather corpus
   textdata <- Corpus(VectorSource(tweets$text))
   textdata <- 

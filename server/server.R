@@ -71,6 +71,7 @@ server <- function(input, output, session) {
       
     
     return (slidervalues)
+
   })
   
   output$values <- renderTable({
@@ -106,7 +107,7 @@ server <- function(input, output, session) {
     token$cache()
     
     output$currentTime <- renderText({invalidateLater(1000, session) 
-    paste("Current time is: ",Sys.time(), "!Beware: Twitter doesn't return tweets older than a week through the search api.")})
+    paste("Current time is: ",Sys.time(), "Twitter doesn't return tweets older than a week through the search api.")})
     
       tweets <- reactive({
         tweets <- getTweets(input$twitterSearchterm, n = input$numberOfTweets, input$retweetsBool) #tweets = df
@@ -114,12 +115,10 @@ server <- function(input, output, session) {
       })
       
       output$tweetCount  <- renderText({
+        withProgress(message = 'Searching tweets...', value = 0, {
         df <- tweets()
         paste("Number of Tweets Found: ", as.character(nrow(df)))
-      })
-      
-      output$table <- renderTable({
-        tweets()
+        })
       })
       
       cleantweets <- reactive({ #clean tweets for sentiment analysis
@@ -138,15 +137,22 @@ server <- function(input, output, session) {
                                 sadness = sum(sadness),
                                 surprise = sum(surprise),
                                 trust = sum(trust),
-                                negative = sum(negative),
-                                positive = sum(negative),
                                 positivity = sum(positivity))
         sentiments <- sentiments %>% gather(emotion,score, anger:positivity)
+        sentiments$score[1] <- sentiments$score[1]/sum(sentiments$score)
+        sentiments$score[2] <- sentiments$score[2]/sum(sentiments$score)
+        sentiments$score[3] <- sentiments$score[3]/sum(sentiments$score)
+        sentiments$score[4] <- sentiments$score[4]/sum(sentiments$score)
+        sentiments$score[5] <- sentiments$score[5]/sum(sentiments$score)
+        sentiments$score[6] <- sentiments$score[6]/sum(sentiments$score)
+        sentiments$score[7] <- sentiments$score[7]/sum(sentiments$score)
+        sentiments$score[8] <- sentiments$score[8]/sum(sentiments$score)
+        sentiments$score[9] <- sentiments$score[9]/sum(sentiments$score)
         return(sentiments)
       })
       
       output$tablesentiments <- renderTable(sentiments())
       
-      output$sentimentTable <- renderPlot({ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})
+      output$sentimentTable <- renderPlot({ withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})})
       
 }
