@@ -1,5 +1,4 @@
-library("rvest")
-library(XML)
+
 
 handlePrices <- function(data){
   for(i in 1:length(data)){

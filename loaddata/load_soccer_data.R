@@ -1,4 +1,4 @@
-library(RSQLite)
+
 
 con <- dbConnect(drv=RSQLite::SQLite(), dbname="loaddata/soccer.sqlite")
 

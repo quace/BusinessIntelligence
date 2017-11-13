@@ -1,19 +1,6 @@
 # Global setups
 
-library(twitteR)
-library(tm)
-library(rjson)
-library(wordcloud)
-library(dplyr)
-library(caret)
-library(ggplot2)
-library(RColorBrewer)
-library(stringr)
-library(syuzhet) # for sentiment analysis
-library(scales)
-library(rbokeh)
-library(base64enc) # fix for twitter oauth in shinyapps.io
-library(SnowballC) # fix for stemming issue in tm
+
 
 # Load twitter authorization
   secrets <- fromJSON(file='scrapers/twitter_secrets.json.nogit')

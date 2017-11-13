@@ -15,6 +15,26 @@ Player Overview
             -overal rating 
             -potential
             -prijs
+
+
+  #pace
+      = (acceleration + speed )/ 2
+      #shooting
+      = (attacking position + finishing + shot_power + long_shots + volleys + penalties) / 
+      #passing
+      = (vision + crossing + FK_accuracy + short_passing + long_passing + curve)
+      #dribbling (agility)
+      = agility + balance + reaction + ballcontrol + dribbling + composure
+      #defending
+      = interceptions + heading accuracy + marking + standing tackle + slider tackle
+      #physicality
+      = jumping + stamina + strength + aggression
+      #potential
+      = 
+      hoe hoger de rating met een lagere leeftijd -> hoe beter potentieel (rating / leeftijd) + normaliseren tussen 0 en 100
+      #price
+
+
             
         OUTPUT:
         -foto van de speler (scrape + waar we geen van vinden een default pic)

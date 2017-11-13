@@ -1,7 +1,4 @@
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(ggthemes)
+
 
 #METHOD 1: works but super duper slow
 #TODO: fix!
@@ -64,12 +61,108 @@ getPOTableClub <- function(clubname){
   returnTable <- filter(fullData,Club==clubname)%>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
   return (returnTable)  
 }
+
+
+#TODO: caching of sliders?
+filterOnRating <- function(table,min,max){
+  table <- filter(table,Rating <= max) %>% filter(Rating >= min) 
+  #table <- table %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Rating)
+  
+  return (table) 
+}
+filterOnPace <- function(table,min,max){
+  table <- table %>% mutate(Pace = as.integer((Acceleration + Speed)/2))
+  
+  table <- filter(table,Pace <= max) %>% filter(Pace >= min) 
+  #table <- table %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Pace)
+  
+  return (table) 
+}
+filterOnShooting <- function(table,min,max){
+  table <- table %>% mutate(Shooting = as.integer((Attacking_Position + Finishing +Shot_Power +Long_Shots + Volleys + Penalties)/6))
+  
+  table <- filter(table,Shooting <= max) %>% filter(Shooting >= min) 
+  
+  return (table) 
+}
+
+filterOnPassing <- function(table,min,max){
+  table <- table %>% mutate(Passing = as.integer((Vision + Crossing + Freekick_Accuracy + Short_Pass + Long_Pass + Curve)/6))
+  
+  table <- filter(table,Passing <= max) %>% filter(Passing >= min) 
+  
+  return (table) 
+}
+
+filterOnDribbling <- function(table,min,max){
+  table <- table %>% mutate(Dribblingx = as.integer((Agility + Balance + Reactions + Ball_Control + Dribbling + Composure)/6))
+  
+  table <- filter(table,Dribblingx <= max) %>% filter(Dribblingx >= min) 
+  
+  return (table) 
+}
+filterOnDefending <- function(table,min,max){
+  table <- table %>% mutate(Defending = as.integer((Interceptions + Heading + Marking + Standing_Tackle + Sliding_Tackle)/5))
+  
+  table <- filter(table,Defending <= max) %>% filter(Defending >= min) 
+  
+  return (table) 
+}
+
+filterOnPhysicality <- function(table,min,max){
+  table <- table %>% mutate(Physicality = as.integer((Jumping + Stamina + Strength + Aggression)/4))
+  
+  table <- filter(table,Physicality <= max) %>% filter(Physicality >= min) 
+  
+  return (table) 
+}
+
 getPOTableAttributes <- function(slidervalues){
+  #rating
   ratingMin <- as.numeric(slidervalues$overallratingmin)
   ratingMax <- as.numeric(slidervalues$overallratingmax)
+  #pace
+  pacemin <- as.numeric(slidervalues$pacemin)
+  pacemax <- as.numeric(slidervalues$pacemax)
+  #shooting
+  shootingmin <- as.numeric(slidervalues$shootingmin)
+  shootingmax <- as.numeric(slidervalues$shootingmax)
+  #passing
+  passingmin <- as.numeric(slidervalues$passingmin)
+  passingmax <- as.numeric(slidervalues$passingmax)
+  #agility
+  agilitymin <- as.numeric(slidervalues$agilitymin)
+  agilitymax <- as.numeric(slidervalues$agilitymax)
+  #defending
+  defendingmin <- as.numeric(slidervalues$defendingmin)
+  defendingmax <- as.numeric(slidervalues$defendingmax)
+  #physicality 
+  physicalitymin <- as.numeric(slidervalues$physicalitymin)
+  physicalitymax <- as.numeric(slidervalues$physicalitymax)
+  #potential
+  potentialmin <- as.numeric(slidervalues$potentialmin)
+  potentialmax <- as.numeric(slidervalues$potentialmax)
+  #price
+  pricemin <- as.numeric(slidervalues$pricemin)
+  pricemax <- as.numeric(slidervalues$pricemax)
+  
+  #rating
+  #returnTable <- filter(fullData,Rating <= ratingMax) %>% filter(Rating >= ratingMin) 
+  #FILTERS
+  returnTable <- filterOnRating(fullData,ratingMin,ratingMax)
+  returnTable <- filterOnPace(returnTable,pacemin,pacemax)
+  returnTable <- filterOnShooting(returnTable,shootingmin,shootingmax)
+  returnTable <- filterOnPassing(returnTable,passingmin,passingmax)
+  #agility = dribbling
+  returnTable <- filterOnDribbling(returnTable,agilitymin,agilitymax)
+  returnTable <- filterOnDefending(returnTable,defendingmin,defendingmax)
+  returnTable <- filterOnPhysicality(returnTable,physicalitymin,physicalitymax)
+  #TODO: potential & price
   
   
-  returnTable <- filter(fullData,Rating <= ratingMax) %>% filter(Rating >= ratingMin) %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  #select what to show
+  #returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age,Pace,Shooting,Passing,Dribblingx,Physicality)
   
   return (returnTable)
 }

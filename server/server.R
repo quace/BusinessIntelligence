@@ -7,6 +7,11 @@ getMatchesByPlayer <- function(playername){
 }
 
 server <- function(input, output, session) {
+  #dynamically suggest playernames
+  updateSelectInput(session, "playername", "Search player: ", choices = fullData$Name)
+  updateSelectInput(session, "clubname", "Search club: ", choices = fullData$Club)
+  
+  
   #PO
   getPODisplayTable <- function(){
     #Player name
@@ -44,8 +49,7 @@ server <- function(input, output, session) {
    #                                    })
   #search attributes using slider values
   POsliderValues <- reactive({
-    slidervalues <- data.frame("overallratingmin" = input$attributeoverallrating[1],
-                            "overallratingmax"=input$attributeoverallrating[2],
+    slidervalues <- data.frame(
                             "pacemin"=input$attributepace[1],
                             "pacemax"=input$attributepace[2],
              "shootingmin"=input$attributeshooting[1],
