@@ -32,8 +32,6 @@ POSidebarPanel <-  sidebarPanel(
 )
 
 POMainPanel <-  mainPanel(
-  DT::dataTableOutput("playerstatstable"),
-  plotOutput("homeMatchesByPlayer"),
-  plotOutput("awayMatchesByPlayer")
+  DT::dataTableOutput("playerstatstable")
  # tableOutput("values")
 )

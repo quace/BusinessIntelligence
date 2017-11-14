@@ -1,16 +1,4 @@
 # Server logic
-getHomeMatchesByPlayer <- function(playername){
-  selectedplayer <- player %>% filter(player_name == playername)
-  api_id <- selectedplayer$player_api_id
-  matchesOfPlayerX <- matches %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-  return(matchesOfPlayerX)
-}
-getAwayMatchesByPlayer <- function(playername){
-  selectedplayer <- player %>% filter(player_name == playername)
-  api_id <- selectedplayer$player_api_id
-  matchesOfPlayerX <- matches %>% select(id, date, away_team_api_id, season, away_team_goal, away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= away_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-  return(matchesOfPlayerX)
-}
 
 server <- function(input, output, session) {
   #dynamically suggest playernames
@@ -83,8 +71,6 @@ server <- function(input, output, session) {
     POsliderValues()
   })
 
-  output$homeMatchesByPlayer <- renderPlot({getHomeMatchesByPlayer(input$playername)})
-  output$awayMatchesByPlayer <- renderPlot({getAwayMatchesByPlayer(input$playername)})
   #######################
   #######################
   
@@ -108,8 +94,23 @@ server <- function(input, output, session) {
   })
   
   
+  getHomeMatchesByPlayer <- function(playername){
+    selectedplayer <- player %>% filter(player_name == playername)
+    api_id <- selectedplayer$player_api_id
+    matchesOfPlayerX <- matches %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    return(matchesOfPlayerX)
+  }
+  getAwayMatchesByPlayer <- function(playername){
+    selectedplayer <- player %>% filter(player_name == playername)
+    api_id <- selectedplayer$player_api_id
+    matchesOfPlayerX <- matches %>% select(id, date, away_team_api_id, season, away_team_goal, away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= away_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    return(matchesOfPlayerX)
+  }
   
   
+  
+  output$homeMatchesByPlayer <- renderPlot({getHomeMatchesByPlayer(input$playernameperf)})
+  output$awayMatchesByPlayer <- renderPlot({getAwayMatchesByPlayer(input$playernameperf)})
   
   
   #######################
