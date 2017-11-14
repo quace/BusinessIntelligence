@@ -2,7 +2,7 @@
 
 server <- function(input, output, session) {
   #dynamically suggest playernames
-  updateSelectInput(session, "playername", "Search player: ", choices = player$player_name)
+  updateSelectInput(session, "playername", "Search player: ", choices = fullData$Name)
   updateSelectInput(session, "clubname", "Search club: ", choices = fullData$Club)
   
   #PO
