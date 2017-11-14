@@ -87,9 +87,13 @@ server <- function(input, output, session) {
     api_id <- selectedplayer$player_api_id
     selectedPerf <- input$performanceSel
     
+    yminimum <- as.integer(input$zoomPlayerPerf[1])
+    ymaximum <- as.integer(input$zoomPlayerPerf[2])
+    ybreaks <- as.integer(input$zoomPlayerPerf/10)
+    
     plot <- player_attributes %>%
       filter(player_api_id == api_id) %>%
-      ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + ylim(0, 100)
+      ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum))
     return(plot)
   })
   
