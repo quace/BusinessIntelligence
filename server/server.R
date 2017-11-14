@@ -136,7 +136,7 @@ server <- function(input, output, session) {
     token$cache()
     
     output$currentTime <- renderText({invalidateLater(1000, session) 
-    paste("Current time is: ",Sys.time(), "Twitter doesn't return tweets older than a week through the search api.")})
+    paste("Time: ",Sys.time())})
     
       tweets <- reactive({
         tweets <- getTweets(input$twitterSearchterm, n = input$numberOfTweets, input$retweetsBool) #tweets = df
