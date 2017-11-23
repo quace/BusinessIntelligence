@@ -2,8 +2,26 @@
 
 server <- function(input, output, session) {
   #dynamically suggest playernames
-  updateSelectInput(session, "playername", "Search player: ", choices = fullData$Name)
-  updateSelectInput(session, "clubname", "Search club: ", choices = fullData$Club)
+  test1 <- data.frame("Name" = c("All Players"))
+  test2 <- data.frame("Name" = fullData$Name)
+  choicesPlayer <- rbind(test1,test2)
+  updateSelectInput(session, "playername", "Search player: ", choices = choicesPlayer$Name)
+  test1 <- data.frame("Name" = c(""))
+  test2 <- data.frame("Name" = fullData$Club)
+  choicesClub <- rbind(test1,test2)
+  updateSelectInput(session, "clubname", "Search club: ", choices = choicesClub$Name)
+  test1 <- data.frame("Name" = c("Country"))
+  test2 <- data.frame("Name" = fullData$Nationality)
+  choicesCountry <- rbind(test1,test2)
+  updateSelectInput(session, "country", "Search country", choices = choicesCountry$Name)
+  test1 <- data.frame("Name" = c("Position"))
+  test2 <- data.frame("Name" = fullData$Club_Position)
+  choicesPosition <- rbind(test1,test2)
+  updateSelectInput(session, "position", "Search position: ", choices = choicesPosition$Name)
+ # updateSelectInput(session, "league", "Search league: ", choices = fullData$Club)
+  
+  
+  
   
   #PO
   getPODisplayTable <- function(){
@@ -14,12 +32,14 @@ server <- function(input, output, session) {
     }
     #Club
     else if(input$POsearchfunction == 2){
+      if(!input$clubname == ""){
       return(getPOTableClub(input$clubname))
+      }
       
     }
     #Attributes
     else if(input$POsearchfunction == 3){
-      return(getPOTableAttributes(POsliderValues()))
+      return(getPOTableAdvanced(POsliderValues(),input$country,input$position,input$preferredfoot))
      
     }
     else {
@@ -60,7 +80,9 @@ server <- function(input, output, session) {
              "potentialmin"=input$attributepotential[1],
              "potentialmax"=input$attributepotential[2],
              "pricemin"=input$attributeprice[1],
-             "pricemax"=input$attributeprice[2])
+             "pricemax"=input$attributeprice[2],
+             "agemin" = input$attributeage[1],
+             "agemax" = input$attributeage[2])
       
     
     return (slidervalues)

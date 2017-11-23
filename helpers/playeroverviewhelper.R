@@ -46,11 +46,12 @@ matches  %>% select(id, date, home_team_api_id, season, home_team_goal, home_pla
 #SEARCH FUNCTION#
 #########################
 getPOTablePlayerName <- function(playername){
-  #old way
-  returnTable <- filter(playerStats,name==playername)
+  if(playername == "All Players"){
+    returnTable <- fullData %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  }else{
   #new way
   returnTable <- filter(fullData,Name==playername) %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
- 
+  }
   return (returnTable)
 }
 getPOTableClub <- function(clubname){
@@ -63,7 +64,23 @@ getPOTableClub <- function(clubname){
 }
 
 
-#TODO: caching of sliders?
+#Advanced Search
+filterOnCountry <- function(table, country){
+  table <- filter(table,Nationality == country) 
+  
+  return (table) 
+}
+
+filterOnPosition <- function(table, position){
+  table <- filter(table,Club_Position == position) 
+  
+  return (table) 
+}
+filterOnPreferredFoot <- function(table, preferredFoot){
+  table <- filter(table,Preffered_Foot == preferredFoot) 
+  
+  return (table) 
+}
 filterOnRating <- function(table,min,max){
   table <- filter(table,Rating <= max) %>% filter(Rating >= min) 
   #table <- table %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Rating)
@@ -125,7 +142,14 @@ filterOnPotential <- function(table,min,max){
   return (table) 
 }
 
-getPOTableAttributes <- function(slidervalues){
+filterOnAge <- function(table,min,max){
+  
+  table <- filter(table,Age <= max) %>% filter(Age >= min) 
+  
+  return (table) 
+}
+
+getPOTableAdvanced <- function(slidervalues,country,position,preferredfoot){
   #rating
   ratingMin <- as.numeric(slidervalues$overallratingmin)
   ratingMax <- as.numeric(slidervalues$overallratingmax)
@@ -153,6 +177,9 @@ getPOTableAttributes <- function(slidervalues){
   #price
   pricemin <- as.numeric(slidervalues$pricemin)
   pricemax <- as.numeric(slidervalues$pricemax)
+  #age
+  agemin <- as.numeric(slidervalues$agemin)
+  agemax <- as.numeric(slidervalues$agemax)
   
   #rating
   #returnTable <- filter(fullData,Rating <= ratingMax) %>% filter(Rating >= ratingMin) 
@@ -168,9 +195,23 @@ getPOTableAttributes <- function(slidervalues){
   returnTable <- filterOnPotential(returnTable,potentialmin,potentialmax)
   #TODO: price
   
+  returnTable <- filterOnAge(returnTable,agemin,agemax)
   
   #select what to show
-  #returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
+  
+  #country
+  if(!country == "Country"){
+  returnTable <- filterOnCountry(returnTable,country)
+  }
+  #position
+  if(!position == "Position"){
+    returnTable <- filterOnPosition(returnTable,position)
+  }
+  #preferred foot
+  if(!preferredfoot == "Preferred Foot"){
+    returnTable <- filterOnPreferredFoot(returnTable,preferredfoot)
+  }
+  
   returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age,Pace,Shooting,Passing,Dribblingx,Physicality,Potential)
   
   return (returnTable)

@@ -1,0 +1,8 @@
+Player performance
+
+
+-zorgt dat ge meerdere spelers kunt selecteren en hun performance op dezelfde grafiek komen te staan
+-maak dit soort grafieken over tijd voor de belangrijkste attributen
+-zet de verschillende grafieken in aparte tabs (binnen de player performance view obviously)
+-maak een zoom functie op de x-as zoals die van de y-as
+-Vergelijk de evolutie van de speler met die van een bekende speler (in een grafiek, met eikingspunt Eden Hazard)
