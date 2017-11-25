@@ -1,3 +1,7 @@
+#GLOBAL VARIABLES
+
+dontShowColumns = c("")
+
 
 
 #METHOD 1: works but super duper slow
@@ -216,158 +220,378 @@ filterOnSimplifiedAttributes <- function(returnTable,slidervalues){
 #none of these attributes are composed, all are singular so we can directly use the filter function
 filterOnExtendedAttributes <- function(returnTable,slidervalues){
   #acceleration
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Acceleration,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Acceleration,as.numeric(slidervalues$accelerationmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Acceleration,as.numeric(slidervalues$accelerationmin))
+  accelerationmax = as.numeric(slidervalues$accelerationmax)
+  accelerationmin = as.numeric(slidervalues$accelerationmin)
+  if((accelerationmin != 0) || (accelerationmax != 100)){
+  returnTable <- filterSmallerThanMax(returnTable,returnTable$Acceleration,accelerationmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Acceleration,accelerationmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Acceleration")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #speed 
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Speed,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Speed,as.numeric(slidervalues$speedmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Speed,as.numeric(slidervalues$speedmin))
+  speedmax = as.numeric(slidervalues$speedmax)
+  speedmin = as.numeric(slidervalues$speedmin)
+  if((speedmin != 0) || (speedmax != 100)){
+  
+  returnTable <- filterSmallerThanMax(returnTable,returnTable$Speed,speedmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Speed,speedmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Speed")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #attacking pos
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Attacking_Position,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Attacking_Position,as.numeric(slidervalues$attackingposmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Attacking_Position,as.numeric(slidervalues$attackingposmin))
+  attackingposmax = as.numeric(slidervalues$attackingposmax)
+  attackingposmin = as.numeric(slidervalues$attackingposmin)
+  if((attackingposmin != 0) || (attackingposmax != 100)){
+  returnTable <- filterSmallerThanMax(returnTable,returnTable$Attacking_Position,attackingposmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Attacking_Position,attackingposmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Attacking_Position")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #finishing
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Finishing,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Finishing,as.numeric(slidervalues$finishingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Finishing,as.numeric(slidervalues$finishingmin))
+  finishingmax = as.numeric(slidervalues$finishingmax)
+  finishingmin = as.numeric(slidervalues$finishingmin)
+  if((finishingmin != 0) || (finishingmax != 100)){
+    
+  returnTable <- filterSmallerThanMax(returnTable,returnTable$Finishing,finishingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Finishing,finishingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Finishing")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #shot power
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Shot_Power,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Shot_Power,as.numeric(slidervalues$shotpowermax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Shot_Power,as.numeric(slidervalues$shotpowermin))
+  shotpowermax = as.numeric(slidervalues$shotpowermax)
+  shotpowermin = as.numeric(slidervalues$shotpowermin)
+  if((shotpowermin != 0) || (shotpowermax != 100)){
+    
+   returnTable <- filterSmallerThanMax(returnTable,returnTable$Shot_Power,shotpowermax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Shot_Power,shotpowermin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Shot_Power")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
+  
   
   #long shots
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Long_Shots,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Long_Shots,as.numeric(slidervalues$longshotsmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Long_Shots,as.numeric(slidervalues$longshotsmin))
+  longshotsmax = as.numeric(slidervalues$longshotsmax)
+  longshotsmin = as.numeric(slidervalues$longshotsmin)
+  if((longshotsmin != 0) || (longshotsmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Long_Shots,longshotsmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Long_Shots,longshotsmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Long_Shots")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #volleys
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Volleys,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Volleys,as.numeric(slidervalues$volleysmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Volleys,as.numeric(slidervalues$volleysmin))
+  volleysmax = as.numeric(slidervalues$volleysmax)
+  volleysmin = as.numeric(slidervalues$volleysmin)
+  if((volleysmin != 0) || (volleysmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Volleys,volleysmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Volleys,volleysmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Volleys")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #penalties
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Penalties,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Penalties,as.numeric(slidervalues$penaltiesmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Penalties,as.numeric(slidervalues$penaltiesmin))
+  penaltiesmax = as.numeric(slidervalues$penaltiesmax)
+  penaltiesmin = as.numeric(slidervalues$penaltiesmin)
+  if((penaltiesmin != 0) || (penaltiesmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Penalties,penaltiesmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Penalties,penaltiesmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Penalties")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #vision
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Vision,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Vision,as.numeric(slidervalues$visionmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Vision,as.numeric(slidervalues$visionmin))
+  visionmax = as.numeric(slidervalues$visionmax)
+  visionmin = as.numeric(slidervalues$visionmin)
+  if((visionmin != 0) || (visionmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Vision,visionmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Vision,visionmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Vision")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #crossing
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Crossing,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Crossing,as.numeric(slidervalues$crossingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Crossing,as.numeric(slidervalues$crossingmin))
+  crossingmax = as.numeric(slidervalues$crossingmax)
+  crossingmin = as.numeric(slidervalues$crossingmin)
+  if((crossingmin != 0) || (crossingmax != 100)){
+    
+  returnTable <- filterSmallerThanMax(returnTable,returnTable$Crossing,crossingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Crossing,crossingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Crossing")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #freekick accuracy
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Freekick_Accuracy,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Freekick_Accuracy,as.numeric(slidervalues$fkaccuracymax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Freekick_Accuracy,as.numeric(slidervalues$fkaccuracymin))
+  fkaccuracymax = as.numeric(slidervalues$fkaccuracymax)
+  fkaccuracymin = as.numeric(slidervalues$fkaccuracymin)
+  if((fkaccuracymin != 0) || (fkaccuracymax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Freekick_Accuracy,fkaccuracymax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Freekick_Accuracy,fkaccuracymin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Freekick_Accuracy")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #short pass
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Short_Pass,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Short_Pass,as.numeric(slidervalues$shortpassmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Short_Pass,as.numeric(slidervalues$shortpassmin))
+  shortpassmax = as.numeric(slidervalues$shortpassmax)
+  shortpassmin = as.numeric(slidervalues$shortpassmin)
+  if((shortpassmin != 0) || (shortpassmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Short_Pass,shortpassmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Short_Pass,shortpassmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Short_Pass")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #long pass
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Long_Pass,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Long_Pass,as.numeric(slidervalues$longpassmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Long_Pass,as.numeric(slidervalues$longpassmin))
+  longpassmax = as.numeric(slidervalues$longpassmax)
+  longpassmin = as.numeric(slidervalues$longpassmin)
+  if((longpassmin != 0) || (longpassmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Long_Pass,longpassmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Long_Pass,longpassmin)
+  }else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Long_Pass")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #curve
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Curve,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Curve,as.numeric(slidervalues$curvemax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Curve,as.numeric(slidervalues$curvemin))
+  curvemax = as.numeric(slidervalues$curvemax)
+  curvemin = as.numeric(slidervalues$curvemin)
+  if((curvemin != 0) || (curvemax != 100)){
+    
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Curve,curvemax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Curve,curvemin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Curve")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #agility
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Agility,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Agility,as.numeric(slidervalues$agilitymax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Agility,as.numeric(slidervalues$agilitymin))
+  agilitymax = as.numeric(slidervalues$agilitymax)
+  agilitymin = as.numeric(slidervalues$agilitymin)
+  if((agilitymin != 0) || (agilitymax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Agility,agilitymax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Agility,agilitymin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Agility")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #balance
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Balance,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Balance,as.numeric(slidervalues$balancemax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Balance,as.numeric(slidervalues$balancemin))
+  balancemax = as.numeric(slidervalues$balancemax)
+  balancemin = as.numeric(slidervalues$balancemin)
+  if((balancemin != 0) || (balancemax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Balance,balancemax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Balance,balancemin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Balance")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #reactions
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Reactions,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Reactions,as.numeric(slidervalues$reactionsmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Reactions,as.numeric(slidervalues$reactionsmin))
+  reactionsmax = as.numeric(slidervalues$reactionsmax)
+  reactionsmin = as.numeric(slidervalues$reactionsmin)
+  
+  if((reactionsmin != 0) || (reactionsmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Reactions,reactionsmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Reactions,reactionsmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Reactions")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #ballcontrol
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Ball_Control,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Ball_Control,as.numeric(slidervalues$ballcontrolmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Ball_Control,as.numeric(slidervalues$ballcontrolmin))
+  ballcontrolmax = as.numeric(slidervalues$ballcontrolmax)
+  ballcontrolmin = as.numeric(slidervalues$ballcontrolmin)
+  
+  if((ballcontrolmin != 0) || (ballcontrolmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Ball_Control,ballcontrolmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Ball_Control,ballcontrolmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Ball_Control")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #dribbling
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Dribbling,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Dribbling,as.numeric(slidervalues$dribblingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Dribbling,as.numeric(slidervalues$dribblingmin))
+  dribblingmax = as.numeric(slidervalues$dribblingmax)
+  dribblingmin = as.numeric(slidervalues$dribblingmin)
+  if((dribblingmin != 0) || (dribblingmax != 100)){
+    
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Dribbling,dribblingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Dribbling,dribblingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Dribbling")
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+  }
   
   #composure
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Composure,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Composure,as.numeric(slidervalues$composuremax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Composure,as.numeric(slidervalues$composuremin))
+  composuremax = as.numeric(slidervalues$composuremax)
+  composuremin = as.numeric(slidervalues$composuremin)
+  
+  if((composuremin != 0) || (composuremax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Composure,composuremax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Composure,composuremin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Composure")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #interceptions
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Interceptions,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Interceptions,as.numeric(slidervalues$interceptionsmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Interceptions,as.numeric(slidervalues$interceptionsmin))
+  interceptionsmax = as.numeric(slidervalues$interceptionsmax)
+  interceptionsmin = as.numeric(slidervalues$interceptionsmin)
+  if((interceptionsmin != 0) || (interceptionsmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Interceptions,interceptionsmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Interceptions,interceptionsmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Interceptions")
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+  }
   
   #heading
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Heading,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Heading,as.numeric(slidervalues$headingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Heading,as.numeric(slidervalues$headingmin))
+  headingmax = as.numeric(slidervalues$headingmax)
+  headingmin = as.numeric(slidervalues$headingmin)
+  if((headingmin != 0) || (headingmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Heading,headingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Heading,headingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Heading")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #marking
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Marking,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Marking,as.numeric(slidervalues$markingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Marking,as.numeric(slidervalues$markingmin))
+  markingmax = as.numeric(slidervalues$markingmax)
+  markingmin = as.numeric(slidervalues$markingmin)
+  if((markingmin != 0) || (markingmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Marking,markingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Marking,markingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Marking")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    
+  }
   
   #standing tackle
- # returnTable <- filterBetweenMinMax(returnTable,returnTable$Standing_Tackle,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Standing_Tackle,as.numeric(slidervalues$standingtacklemax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Standing_Tackle,as.numeric(slidervalues$standingtacklemin))
+  standingtacklemax = as.numeric(slidervalues$standingtacklemax)
+  standingtacklemin = as.numeric(slidervalues$standingtacklemin)
+  if((standingtacklemin != 0) || (standingtacklemax != 100)){
+   returnTable <- filterSmallerThanMax(returnTable,returnTable$Standing_Tackle,standingtacklemax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Standing_Tackle,standingtacklemin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Standing_Tackle")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #sliding tackle
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Sliding_Tackle,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Sliding_Tackle,as.numeric(slidervalues$slidingtacklemax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Sliding_Tackle,as.numeric(slidervalues$slidingtacklemin))
+  slidingtacklemax = as.numeric(slidervalues$slidingtacklemax)
+  slidingtacklemin = as.numeric(slidervalues$slidingtacklemin)
+  
+  if((slidingtacklemin != 0) || (slidingtacklemax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Sliding_Tackle,slidingtacklemax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Sliding_Tackle,slidingtacklemin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Sliding_Tackle")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   
   #jumping
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Jumping,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Jumping,as.numeric(slidervalues$jumpingmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Jumping,as.numeric(slidervalues$jumpingmin))
+  jumpingmax = as.numeric(slidervalues$jumpingmax)
+  jumpingmin = as.numeric(slidervalues$jumpingmin)
+  if((jumpingmin != 0) || (jumpingmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Jumping,jumpingmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Jumping,jumpingmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Jumping")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    
+  }
   
   #stamina
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Stamina,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Stamina,as.numeric(slidervalues$staminamax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Stamina,as.numeric(slidervalues$staminamin))
+  staminamax = as.numeric(slidervalues$staminamax)
+  staminamin = as.numeric(slidervalues$staminamin)
+  if((staminamin != 0) || (staminamax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Stamina,staminamax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Stamina,staminamin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Stamina")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    
+  }
   
   #strength
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Strength,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Strength,as.numeric(slidervalues$strengthmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Strength,as.numeric(slidervalues$strengthmin))
+  strengthmax = as.numeric(slidervalues$strengthmax)
+  strengthmin = as.numeric(slidervalues$strengthmin)
+  if((strengthmin != 0) || (strengthmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Strength,staminamax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Strength,staminamin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Strength")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    
+  }
   
   #aggression
-#  returnTable <- filterBetweenMinMax(returnTable,returnTable$Aggression,,)
-  returnTable <- filterSmallerThanMax(returnTable,returnTable$Aggression,as.numeric(slidervalues$aggressionmax))
-  returnTable <- filterLargeThanMin(returnTable,returnTable$Aggression,as.numeric(slidervalues$aggressionmin))
+  aggressionmax = as.numeric(slidervalues$aggressionmax)
+  aggressionmin = as.numeric(slidervalues$aggressionmin)
   
+  if((aggressionmin != 0) || (aggressionmax != 100)){
+    returnTable <- filterSmallerThanMax(returnTable,returnTable$Aggression,aggressionmax)
+  returnTable <- filterLargeThanMin(returnTable,returnTable$Aggression,aggressionmin)
+  } else {
+    #dont show this column in the end table
+    help <- append(dontShowColumns,"Aggression")
+    assign("dontShowColumns",help,envir = .GlobalEnv)  
+  }
   return (returnTable)
 }
-
 
 
 getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferredfoot){
   #data to use
   returnTable <- fullData
+  #reset vector of columns to show
+  assign("dontShowColumns",c(""),envir = .GlobalEnv)
+  
   
   if(simplified){
     returnTable <- filterOnSimplifiedAttributes(returnTable, slidervalues)
@@ -412,11 +636,15 @@ getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferr
   
   #TO DO: select the right things to show depending if simplified or not
   if(simplified){
-  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age,Pace,Shooting,Passing,Dribblingx,Physicality,Potential)
+  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Potential,Rating,Age,Pace,Shooting,Passing,Dribblingx,Physicality)
   } else {
-    returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
-    
+    returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Acceleration,Speed,Attacking_Position,Finishing,Shot_Power,Long_Shots,Volleys,Penalties,Vision,Crossing,Freekick_Accuracy,Short_Pass,Long_Pass,Curve,Agility,Balance,Reactions,Ball_Control,Dribbling,Composure,Interceptions,Heading,Marking,Standing_Tackle,Sliding_Tackle,Jumping,Stamina,Strength,Aggression)
+    #remove the first ""
+    dontShowColumns <- dontShowColumns[-1]
+    #dont show these columns in the resulting table
+    returnTable <- returnTable[,!(colnames(returnTable) %in% dontShowColumns)]
   }
+  
   
   return (returnTable)
 }
