@@ -39,8 +39,13 @@ server <- function(input, output, session) {
     }
     #Attributes
     else if(input$POsearchfunction == 3){
-      return(getPOTableAdvanced(POsliderValues(),input$country,input$position,input$preferredfoot))
-     
+      if(input$simplify){
+         return(getPOTableAdvanced(input$simplify, POsliderValues(),input$country,input$position,input$preferredfoot))
+      }
+      else {
+        return(getPOTableAdvanced(input$simplify, POEXsliderValues(),input$country,input$position,input$preferredfoot))
+        
+      }
     }
     else {
       return (playerStats)
@@ -60,7 +65,7 @@ server <- function(input, output, session) {
   #                                     {
                                          
    #                                    })
-  #search attributes using slider values
+  #search attributes using slider values: simplified
   POsliderValues <- reactive({
     slidervalues <- data.frame(
                             "pacemin"=input$attributepace[1],
@@ -87,6 +92,81 @@ server <- function(input, output, session) {
     
     return (slidervalues)
 
+  })
+  
+  #Extented version of the attribute sliders
+  POEXsliderValues <- reactive({
+    slidervalues <- data.frame(
+      "accelerationmin"=input$attributeEXAcceleration[1],
+      "accelerationmax"=input$attributeEXAcceleration[2],
+      "speedmin"=input$attributeEXSpeed[1],
+      "speedmax"=input$attributeEXSpeed[2],
+      "attackingposmin"=input$attributeEXAttackingPos[1],
+      "attackingposmax"=input$attributeEXAttackingPos[2],
+      "finishingmin"=input$attributeEXFinishing[1],
+      "finishingmax"=input$attributeEXFinishing[2],
+      "shotpowermin"=input$attributeEXShotPower[1],
+      "shotpowermax"=input$attributeEXShotPower[2],
+      "longshotsmin"=input$attributeEXLongShots[1],
+      "longshotsmax"=input$attributeEXLongShots[2],
+      "volleysmin"=input$attributeEXVolleys[1],
+      "volleysmax"=input$attributeEXVolleys[2],
+      "penaltiesmin"=input$attributeEXPenalties[1],
+      "penaltiesmax"=input$attributeEXPenalties[2],
+      "visionmin"=input$attributeEXVision[1],
+      "visionmax"=input$attributeEXVision[2],
+      "crossingmin" = input$attributeEXCrossing[1],
+      "crossingmax" = input$attributeEXCrossing[2],
+      "fkaccuracymin"=input$attributeEXFKAccuracy[1],
+      "fkaccuracymax"=input$attributeEXFKAccuracy[2],
+      "shortpassmin"=input$attributeEXShortPass[1],
+      "shortpassmax"=input$attributeEXShortPass[2],
+      "longpassmin"=input$attributeEXLongPass[1],
+      "longpassmax"=input$attributeEXLongPass[2],
+      "curvemin"=input$attributeEXCurve[1],
+      "curvemax"=input$attributeEXCurve[2],
+      "agilitymin"=input$attributeEXAgility[1],
+      "agilitymax"=input$attributeEXAgility[2],
+      "balancemin"=input$attributeEXBalance[1],
+      "balancemax"=input$attributeEXBalance[2],
+      "reactionsmin" = input$attributeEXReactions[1],
+      "reactionsmax" = input$attributeEXReactions[2],
+      "ballcontrolmin" = input$attributeEXBallControl[1],
+      "ballcontrolmax" = input$attributeEXBallControl[2],
+      "dribblingmin"=input$attributeEXDribbling[1],
+      "dribblingmax"=input$attributeEXDribbling[2],
+      "composuremin"=input$attributeEXComposure[1],
+      "composuremax"=input$attributeEXComposure[2],
+      "interceptionsmin"=input$attributeEXInterceptions[1],
+      "interceptionsmax"=input$attributeEXInterceptions[2],
+      "headingmin"=input$attributeEXHeading[1],
+      "headingmax"=input$attributeEXHeading[2],
+      "markingmin"=input$attributeEXMarking[1],
+      "markingmax"=input$attributeEXMarking[2],
+      "standingtacklemin"=input$attributeEXStandingTackle[1],
+      "standingtacklemax"=input$attributeEXStandingTackle[2],
+      "slidingtacklemin" = input$attributeEXSlidingTackle[1],
+      "slidingtacklemax" = input$attributeEXSlidingTackle[2],
+      "jumpingmin"=input$attributeEXJumping[1],
+      "jumpingmax"=input$attributeEXJumping[2],
+      "staminamin"=input$attributeEXStamina[1],
+      "staminamax"=input$attributeEXStamina[2],
+      "strengthmin"=input$attributeEXStrength[1],
+      "strengthmax"=input$attributeEXStrength[2],
+      "aggressionmin" = input$attributeEXAggression[1],
+      "aggressionmax" = input$attributeEXAggression[2],
+      "overallratingmin"=input$attributeoverallrating[1],
+      "overallratingmax"=input$attributeoverallrating[2],
+      "potentialmin"=input$attributepotential[1],
+      "potentialmax"=input$attributepotential[2],
+      "pricemin"=input$attributeprice[1],
+      "pricemax"=input$attributeprice[2],
+      "agemin" = input$attributeage[1],
+      "agemax" = input$attributeage[2])
+    
+    
+    return (slidervalues)
+    
   })
   
   output$values <- renderTable({
