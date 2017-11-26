@@ -20,6 +20,10 @@ server <- function(input, output, session) {
   updateSelectInput(session, "position", "Search position: ", choices = choicesPosition$Name)
   
   
+  test1 <- data.frame("Name" = c(""))
+  test2 <- data.frame("Name" = fullData$Club)
+  choicesClub <- rbind(test1,test2)
+  updateSelectInput(session, "TALASClub",choices = choicesClub$Name)
   
   
   #PO
@@ -57,6 +61,7 @@ server <- function(input, output, session) {
     #playerStats
     getPODisplayTable()
   })
+    
   
   
   #search on playername
@@ -288,5 +293,21 @@ server <- function(input, output, session) {
       output$tablesentiments <- renderTable(sentiments())
       
       output$sentimentTable <- renderPlot({ withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})})
+ 
+      
+######################################################
+#Transfer Advice
+######################################################
+      getLoanAndSellTable <- function(){
+        if(!(input$TALASClub == "")){
+        return(constructLoandSellTable(input$TALASClub))
+        }
+      }
+      
+      
+      output$loanandselltable <- shiny::renderDataTable(getLoanAndSellTable(),escape=FALSE
+      )
+      
+      
       
 }

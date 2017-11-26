@@ -2,6 +2,7 @@
 source("UI/BRMUI.R")
 source("UI/POUI.R")
 source("UI/TUI.R")
+source("UI/TAUI.R")
 
 ui <- navbarPage("Soccer Analysis",
                  theme = shinythemes::shinytheme("flatly"),
@@ -19,7 +20,9 @@ ui <- navbarPage("Soccer Analysis",
                            
                             mainPanel = BRMMainPanel
                           )),
-                 tabPanel("Loan/Sell"),
+                 navbarMenu("Transfer Advice",
+                            LAStabPanel,
+                            AtabPanel),
                  inverse=TRUE
 )
   
