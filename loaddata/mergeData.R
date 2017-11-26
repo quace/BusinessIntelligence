@@ -20,3 +20,29 @@ IDextendedFullData <- cbind(fullData, IDextendedData[,c("ID","url")])
 #merge this with the completeDataset
 MergedCompleteData <- merge(x = IDextendedFullData, y = fullData2[,c("ID","Photo","Flag","Club.Logo","Value","Wage")],by="ID")
 #write.csv(MergedCompleteData,file="MergedCompleteData3.csv")
+
+
+
+handlePrices <- function(data){
+  for(i in 1:length(data)){
+    price = data[i]
+    if(grepl("K",price)){
+      price = substr(price, 1, nchar(price)-1)
+      price = as.numeric(price) * 1000
+    } else if(grepl("M",price)){
+      price = substr(price, 1, nchar(price)-1)
+      price = as.numeric(price)*1000000
+    }
+    if(is.na(price)){price=0}
+    data[i] = price
+  }
+  return (data)
+}
+
+MergedCompleteData <- transform(MergedCompleteData, ValueUnified = handlePrices(gsub("???","",Value)))
+MergedCompleteData <- transform(MergedCompleteData, WageUnified = handlePrices(gsub("???","",Wage)))
+write.csv(MergedCompleteData,file="MergedCompleteData3.csv")
+
+
+
+

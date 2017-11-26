@@ -180,8 +180,16 @@ filterOnAge <- function(table,min,max){
   
   return (table) 
 }
-
-
+#min and max are price in k, so multiply *1000
+filterOnPrice <- function(table,min,max){
+  min = min*1000
+  max = max*1000
+  
+  table <- filterSmallerThanMax(table,table$ValueUnified,max)
+  table <- filterLargeThanMin(table,table$ValueUnified,min)
+  
+  return (table) 
+}
 
 filterOnSimplifiedAttributes <- function(returnTable,slidervalues){
  #pace
@@ -616,8 +624,7 @@ getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferr
  #GENERAL FILTERS
   returnTable <- filterOnRating(returnTable,ratingMin,ratingMax)
   returnTable <- filterOnPotential(returnTable,potentialmin,potentialmax)
-  #TODO: price
-  
+  returnTable <- filterOnPrice(returnTable,pricemin,pricemax)
   returnTable <- filterOnAge(returnTable,agemin,agemax)
   
   
@@ -636,9 +643,9 @@ getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferr
   
   #TO DO: select the right things to show depending if simplified or not
   if(simplified){
-  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Potential,Rating,Age,Pace,Shooting,Passing,Dribblingx,Physicality)
+  returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Value,Pace,Shooting,Passing,Dribblingx,Physicality)
   } else {
-    returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Acceleration,Speed,Attacking_Position,Finishing,Shot_Power,Long_Shots,Volleys,Penalties,Vision,Crossing,Freekick_Accuracy,Short_Pass,Long_Pass,Curve,Agility,Balance,Reactions,Ball_Control,Dribbling,Composure,Interceptions,Heading,Marking,Standing_Tackle,Sliding_Tackle,Jumping,Stamina,Strength,Aggression)
+    returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Value,Acceleration,Speed,Attacking_Position,Finishing,Shot_Power,Long_Shots,Volleys,Penalties,Vision,Crossing,Freekick_Accuracy,Short_Pass,Long_Pass,Curve,Agility,Balance,Reactions,Ball_Control,Dribbling,Composure,Interceptions,Heading,Marking,Standing_Tackle,Sliding_Tackle,Jumping,Stamina,Strength,Aggression)
     #remove the first ""
     dontShowColumns <- dontShowColumns[-1]
     #dont show these columns in the resulting table

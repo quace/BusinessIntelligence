@@ -173,7 +173,7 @@ POtabPanel <- tabPanel("Player Overview",
                                      sliderInput("attributeoverallrating",label="Overall Rating",min=0,max=100,value=c(0,100)),
                                      sliderInput("attributepotential",label="Potential",min=0,max=100,value=c(0,100)),
                                      sliderInput("attributeage",label="Age",min=15,max=50,value=c(15,50)),
-                                     sliderInput("attributeprice",label="Price (in k)",min=0,max=500,value=c(0,500)))
+                                     sliderInput("attributeprice",label="Value (in k)",min=0,max=100000,value=c(0,100000)))
                   
                     
              
