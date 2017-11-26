@@ -18,7 +18,6 @@ server <- function(input, output, session) {
   test2 <- data.frame("Name" = fullData$Club_Position)
   choicesPosition <- rbind(test1,test2)
   updateSelectInput(session, "position", "Search position: ", choices = choicesPosition$Name)
- # updateSelectInput(session, "league", "Search league: ", choices = fullData$Club)
   
   
   

@@ -9,6 +9,8 @@ source("libraries.R")
 #load the database
 source("loaddata/load_soccer_data.R")
 source("loaddata/load_full_data.R")
+#source("loaddata/mergeData.R")
+
 
 #scrape data
 source("scrapers/scrapers.R")

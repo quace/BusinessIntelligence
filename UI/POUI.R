@@ -20,7 +20,7 @@ POtabPanel <- tabPanel("Player Overview",
                   ),
                   conditionalPanel(condition="input.POsearchfunction == 3",
                                    hr(),
-                                   selectInput("league", NULL,choices = c(),selected=NULL),
+                                 #  selectInput("league", NULL,choices = c(),selected=NULL),
                                    selectInput("country", NULL,choices = c(),selected=NULL),
                                    selectInput("position", NULL,choices = c(),selected=NULL),
                                    selectInput("preferredfoot", NULL,choices = c("Preferred Foot","Left","Right"),selected=NULL)
