@@ -19,6 +19,10 @@ calculateWhichPlayersToLoan <- function(table){
 
 #suggest which players to sell
 calculateWhichPlayersToSell <- function(table){
+  
+  
+  
+  
   return(table)
 }
 

@@ -24,6 +24,7 @@ server <- function(input, output, session) {
   test2 <- data.frame("Name" = fullData$Club)
   choicesClub <- rbind(test1,test2)
   updateSelectInput(session, "TALASClub",choices = choicesClub$Name)
+  updateSelectInput(session, "TAAClub",choices = choicesClub$Name)
   
   
   #PO
@@ -308,6 +309,14 @@ server <- function(input, output, session) {
       output$loanandselltable <- shiny::renderDataTable(getLoanAndSellTable(),escape=FALSE
       )
       
+      
+      #getAcquireTable() <- function() {
+      #  if(!(input$TAAClub == "")){
+          
+      #  }
+      #}
+      
+      #output$acquiretable <- shiny::renderDataTable(getAcquireTable(),escape=FALSE)
       
       
 }

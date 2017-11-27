@@ -23,7 +23,20 @@ LAStabPanel <- tabPanel("Loan and Sell",
 
 AtabPanel <- tabPanel("Acquire",
                        fluidPage(
-                         fluidRow(style = "background-color:#e8ebef;")
+                         fluidRow(
+                           #OPTIONS
+                           column(3,style = "background-color:#e8ebef;" ,
+                                  selectInput("TAAClub",label=h3("Select club"),
+                                              choices = c(),selected=NULL)
+                           ),
+                           
+                           
+                           #OUTPUT
+                           column(9, 
+                                  #test
+                                  tags$span(icon('circle'), style = "display: none;"))) 
+                                  
+                                #  shiny::dataTableOutput("acquiretable")))
                        )
 )
                                                                              
