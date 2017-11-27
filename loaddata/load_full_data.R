@@ -5,3 +5,4 @@
 
 
 fullData = read.csv("loaddata/MergedCompleteDataNEW.csv",header=TRUE)
+fullData$Photo <- sprintf("<img src='%s'>",fullData$Photo)

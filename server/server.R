@@ -309,6 +309,13 @@ server <- function(input, output, session) {
       output$loanandselltable <- shiny::renderDataTable(getLoanAndSellTable(),escape=FALSE
       )
       
+      output$reasonLoan <- renderText({"Rating is below average but \npotential is high"})
+      output$reasonAttackingPos <- renderText({"Attacking technique is below average"})
+      output$reasonWage <- renderText({"Player is overpayed"})
+      output$reasonValue <- renderText({"Sell player for more \nthan they're worth"})
+      output$reasonContract <- renderText({"Contract will soon expire"})
+      output$reasonAge <- renderText({"Player is getting old \n(Keep in mind that he might be a \ngood tutor for younger players!)"})
+
       
       #getAcquireTable() <- function() {
       #  if(!(input$TAAClub == "")){

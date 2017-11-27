@@ -42,6 +42,7 @@ checkAttackingTechnique <- function(table){
   table$reasonsToSellAttacking[table$numberBelowAverage > 2] <- table$reasonsToSellAttacking[table$numberBelowAverage > 2] + 1
   
   table$reasonsToSell[table$reasonsToSellAttacking > 0] <- table$reasonsToSell[table$reasonsToSellAttacking > 0] + 1
+  table$Reason[table$reasonsToSellAttacking > 0] <- paste(table$Reason[table$reasonsToSellAttacking > 0] ,as.character(icon("bullseye")),sep=" ")
   
   return(table)
 }
@@ -49,29 +50,34 @@ checkAttackingTechnique <- function(table){
 checkWage <- function(table){
   table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
   table$reasonsToSell[table$WageUnified > table$PredictedWage] <- table$reasonsToSell[table$WageUnified > table$PredictedWage] + 1
+  table$Reason[table$WageUnified > table$PredictedWage]  <- paste(table$Reason[table$WageUnified > table$PredictedWage] ,as.character(icon("credit-card")),sep=" ")
   return(table)
 }
 
 checkValue <- function(table){
   table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
   table$reasonsToSell[table$ValueUnified > table$PredictedValue] <- table$reasonsToSell[table$ValueUnified > table$PredictedValue] + 1
+  table$Reason[table$ValueUnified > table$PredictedValue]  <- paste(table$Reason[table$ValueUnified > table$PredictedValue] ,as.character(icon("money")),sep=" ")
   return(table)
 }
 
 checkContract <- function(table){
   currentYear <- as.integer(format(Sys.Date(), "%Y"))
   table$reasonsToSell[abs(table$Contract_Expiry-currentYear) < 2] <- table$reasonsToSell[abs(table$Contract_Expiry-currentYear) < 2] + 1
+  table$Reason[abs(table$Contract_Expiry-currentYear) < 2]  <- paste(table$Reason[abs(table$Contract_Expiry-currentYear) < 2],as.character(icon("ban")),sep=" ")
   return(table)
 }
 
 checkAge <- function(table){
   table$reasonsToSell[table$Age > 30] <- table$reasonsToSell[table$Age > 30] + 1
+  table$Reason[table$Age > 30] <- paste(table$Reason[table$Age > 30],as.character(icon("graduation-cap")),sep=" ")
   return(table)
 }
 
 #suggest which players to sell: min 2 reasons why 
 calculateWhichPlayersToSell <- function(table){
   table$reasonsToSell <- 0
+  table$Reason <- as.character('')
   
   #attacking technique is low
   table <- checkAttackingTechnique(table)
@@ -93,9 +99,11 @@ calculateWhichPlayersToSell <- function(table){
   
   #threshold is 2 atm
   table$Sell[(table$reasonsToSell > 1)] <- as.character(icon('check-square'))  
+  table$Reason[(table$reasonsToSell < 2)]  <- as.character('')
   
   return(table)
 }
+
 
 
 constructLoandSellTable <- function(club){
@@ -112,7 +120,7 @@ constructLoandSellTable <- function(club){
   
   loanAndSellTable$Sell <- as.character(icon('square-o'))
   loanAndSellTable <- calculateWhichPlayersToSell(loanAndSellTable)
-  loanAndSellTable <- loanAndSellTable %>% select("Name","Nationality","Age","Rating","Potential","Loan","Sell")
+  loanAndSellTable <- loanAndSellTable %>% select("Photo","Name","Nationality","Age","Rating","Potential","Loan","Sell","Reason")
   
   return(loanAndSellTable)
 }

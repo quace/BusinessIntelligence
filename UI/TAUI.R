@@ -7,7 +7,25 @@ LAStabPanel <- tabPanel("Loan and Sell",
                                   #OPTIONS
                                   column(3,style = "background-color:#e8ebef;" ,
                                   selectInput("TALASClub",label=h3("Select club"),
-                                              choices = c(),selected=NULL)
+                                              choices = c(),selected=NULL),
+                                  fluidRow(column(12,
+                                                  tags$div(class="header", checked=NA,
+                                                           tags$h4("Reason to Loan:")),
+                                                  verbatimTextOutput("reasonLoan" ),
+                                                  hr(),
+                                                  tags$div(class="header", checked=NA,
+                                                           tags$h4("Reasons to Sell:")),
+                                                  icon("bullseye"),
+                                                  verbatimTextOutput("reasonAttackingPos" ),
+                                                  icon("credit-card"),
+                                                  verbatimTextOutput("reasonWage"),
+                                                  icon("money"),
+                                                  verbatimTextOutput("reasonValue"),
+                                                  icon("ban"),
+                                                  verbatimTextOutput("reasonContract"),
+                                                  icon("graduation-cap"),
+                                                  verbatimTextOutput("reasonAge"),
+                                                  hr()))
                                   ),
                                   
                                   
