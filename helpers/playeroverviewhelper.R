@@ -103,7 +103,7 @@ filterOnRating <- function(table,min,max){
 }
 
 filterOnPace <- function(table,min,max){
-  table <- table %>% mutate(Pace = as.integer((Acceleration + Speed)/2))
+  #table <- table %>% mutate(Pace = as.integer(0.45*Acceleration + 0.55*Speed))
   
   #table <- filterBetweenMinMax(table,table$Pace, min, max)
   table <- filterSmallerThanMax(table,table$Pace,max)
@@ -113,7 +113,7 @@ filterOnPace <- function(table,min,max){
 }
 
 filterOnShooting <- function(table,min,max){
-  table <- table %>% mutate(Shooting = as.integer((Attacking_Position + Finishing +Shot_Power +Long_Shots + Volleys + Penalties)/6))
+  #table <- table %>% mutate(Shooting = as.integer(0.05*Attacking_Position + 0.45*Finishing +0.20*Shot_Power +0.20*Long_Shots + 0.05*Volleys + 0.05*Penalties))
   
 #  table <- filterBetweenMinMax(table,table$Shooting,min,max)
   table <- filterSmallerThanMax(table,table$Shooting,max)
@@ -124,7 +124,7 @@ filterOnShooting <- function(table,min,max){
 }
 
 filterOnPassing <- function(table,min,max){
-  table <- table %>% mutate(Passing = as.integer((Vision + Crossing + Freekick_Accuracy + Short_Pass + Long_Pass + Curve)/6))
+  #table <- table %>% mutate(Passing = as.integer(0.2*Vision + 0.2*Crossing + 0.05*Freekick_Accuracy + 0.35*Short_Pass + 0.15*Long_Pass + 0.05*Curve))
   
 #  table <- filterBetweenMinMax(table,table$Passing,min,max)
   table <- filterSmallerThanMax(table,table$Passing,max)
@@ -134,7 +134,7 @@ filterOnPassing <- function(table,min,max){
 }
 
 filterOnDribbling <- function(table,min,max){
-  table <- table %>% mutate(Dribblingx = as.integer((Agility + Balance + Reactions + Ball_Control + Dribbling + Composure)/6))
+  #table <- table %>% mutate(Dribblingx = as.integer(0.1*Agility + 0.05*Balance + 0.05*Reactions + 0.3*Ball_Control + 0.5*Dribbling))
   
 #  table <- filterBetweenMinMax(table,table$Dribblingx,min,max)
   table <- filterSmallerThanMax(table,table$Dribblingx,max)
@@ -143,7 +143,7 @@ filterOnDribbling <- function(table,min,max){
   return (table) 
 }
 filterOnDefending <- function(table,min,max){
-  table <- table %>% mutate(Defending = as.integer((Interceptions + Heading + Marking + Standing_Tackle + Sliding_Tackle)/5))
+  #table <- table %>% mutate(Defending = as.integer(0.2*Interceptions + 0.1*Heading + 0.3*Marking + 0.3*Standing_Tackle + 0.1*Sliding_Tackle))
   
 #  table <- filterBetweenMinMax(table,table$Defending,min,max)
   table <- filterSmallerThanMax(table,table$Defending,max)
@@ -153,7 +153,7 @@ filterOnDefending <- function(table,min,max){
 }
 
 filterOnPhysicality <- function(table,min,max){
-  table <- table %>% mutate(Physicality = as.integer((Jumping + Stamina + Strength + Aggression)/4))
+  #table <- table %>% mutate(Physicality = as.integer(0.05*Jumping + 0.25*Stamina + 0.5*Strength + 0.2*Aggression))
   
 #  table <- filterBetweenMinMax(table,table$Physicality,min,max)
   table <- filterSmallerThanMax(table,table$Physicality,max)
@@ -163,7 +163,7 @@ filterOnPhysicality <- function(table,min,max){
 }
 
 filterOnPotential <- function(table,min,max){
-  table <- table %>% mutate(Potential = as.integer((Rating/Age)*20))
+  #table <- table %>% mutate(Potential = as.integer((Rating/Age)*20))
   
 #  table <- filterBetweenMinMax(table,table$Potential,min,max)
   table <- filterSmallerThanMax(table,table$Potential,max)
@@ -171,6 +171,14 @@ filterOnPotential <- function(table,min,max){
   
   return (table) 
 }
+
+#TO DO ######
+goalKeeperScore <- function(){
+  table <- table %>% mutate(GK_Score = as.integer((GK_Positioning + GK_Diving + GK_Kicking + GK_Handling + GK_Reflexes )/5))
+  
+}
+###########
+
 
 filterOnAge <- function(table,min,max){
   

@@ -2,8 +2,6 @@
 
 #suggest which players to loan: low rating, high potential
 calculateWhichPlayersToLoan <- function(table){
-  #we need the potential
-  table <- table %>% mutate(Potential = as.integer((Rating/Age)*20))
   
   #calculate the means
   meanPotential <- mean(table$Potential)
@@ -17,11 +15,84 @@ calculateWhichPlayersToLoan <- function(table){
   return (table)
 }
 
-#suggest which players to sell
+
+#For higher attacking technique:
+#-boost stamina
+#-get faster
+#get stronger
+#master the pass
+checkAttackingTechnique <- function(table){
+  table$reasonsToSellAttacking <- 0
+  
+  meanStamina <- mean(table$Stamina)
+  meanSpeed <- mean(table$Speed)
+  meanStrength <- mean(table$Strength)
+  meanAttackingPos <- mean(table$Attacking_Position)
+  meanPassing <- mean(table$Passing)
+  
+  #sell if attacking pos < mean
+  table$reasonsToSellAttacking[(table$Attacking_Position < meanAttackingPos)] <- table$reasonsToSellAttacking[(table$Attacking_Position < meanAttackingPos)] + 1 
+  
+  #or if min 2 of those other attributes are below the mean
+  table$numberBelowAverage[table$Stamina < meanStamina] <- table$numberBelowAverage[table$Stamina < meanStamina] + 1
+  table$numberBelowAverage[table$Speed < meanSpeed] <- table$numberBelowAverage[table$Speed < meanSpeed] + 1
+  table$numberBelowAverage[table$Strength < meanStrength] <- table$numberBelowAverage[table$Strength < meanStrength] + 1
+  table$numberBelowAverage[table$Passing < meanPassing] <- table$numberBelowAverage[table$Passing < meanPassing] + 1
+  
+  table$reasonsToSellAttacking[table$numberBelowAverage > 2] <- table$reasonsToSellAttacking[table$numberBelowAverage > 2] + 1
+  
+  table$reasonsToSell[table$reasonsToSellAttacking > 0] <- table$reasonsToSell[table$reasonsToSellAttacking > 0] + 1
+  
+  return(table)
+}
+
+checkWage <- function(table){
+  table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
+  table$reasonsToSell[table$WageUnified > table$PredictedWage] <- table$reasonsToSell[table$WageUnified > table$PredictedWage] + 1
+  return(table)
+}
+
+checkValue <- function(table){
+  table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
+  table$reasonsToSell[table$ValueUnified > table$PredictedValue] <- table$reasonsToSell[table$ValueUnified > table$PredictedValue] + 1
+  return(table)
+}
+
+checkContract <- function(table){
+  currentYear <- as.integer(format(Sys.Date(), "%Y"))
+  table$reasonsToSell[abs(table$Contract_Expiry-currentYear) < 2] <- table$reasonsToSell[abs(table$Contract_Expiry-currentYear) < 2] + 1
+  return(table)
+}
+
+checkAge <- function(table){
+  table$reasonsToSell[table$Age > 30] <- table$reasonsToSell[table$Age > 30] + 1
+  return(table)
+}
+
+#suggest which players to sell: min 2 reasons why 
 calculateWhichPlayersToSell <- function(table){
+  table$reasonsToSell <- 0
+  
+  #attacking technique is low
+  table <- checkAttackingTechnique(table)
+  
+  #over peak potential 
+  
+  #wage > predicted wage (you overpay the player)
+  #table <- checkWage(table)
+  
+  #value  > predicted value (you can make extra profit)
+  #table <- checkValue(table)
+  
+  #contract_expiry - current year < 2j
+  table <- checkContract(table)
+  
+  #old people
+  table <- checkAge(table)
   
   
-  
+  #threshold is 2 atm
+  table$Sell[(table$reasonsToSell > 1)] <- as.character(icon('check-square'))  
   
   return(table)
 }
@@ -31,8 +102,8 @@ constructLoandSellTable <- function(club){
   #first filter to players of this club
   loanAndSellTable <- filter(fullData, Club == club)
   
-  load.fontawesome()
-  fa <- fontawesome(c('fa-check-square', 'fa-square-o'))
+  #load.fontawesome()
+  #fa <- fontawesome(c('fa-check-square', 'fa-square-o'))
   
   
   

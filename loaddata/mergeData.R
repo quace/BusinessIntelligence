@@ -21,7 +21,8 @@ IDextendedFullData <- cbind(fullData, IDextendedData[,c("ID","url")])
 MergedCompleteData <- merge(x = IDextendedFullData, y = fullData2[,c("ID","Photo","Flag","Club.Logo","Value","Wage")],by="ID")
 #write.csv(MergedCompleteData,file="MergedCompleteData3.csv")
 
-
+MergeCompleteData <- merge(fullData, fullData2[,c("ID","Potential")], by="ID")
+write.csv(MergeCompleteData,file="MergedCompleteDataNEW.csv")
 
 handlePrices <- function(data){
   for(i in 1:length(data)){
