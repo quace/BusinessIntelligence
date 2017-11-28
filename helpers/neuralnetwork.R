@@ -96,7 +96,7 @@ legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
 getValuePrediction <- function(contract_expiry, rating, height, weight, age, Potential, Pace, Shooting, Passing, Dribblingx,Defending,Physicality,GK_Score, GK_Bool, DEF_Bool, MF_Bool, ATT_Bool) {
   predictionData <- data.frame(contract_expiry, rating, height, weight, age, Potential, Pace, Shooting, Passing, Dribblingx,Defending,Physicality,GK_Score, GK_Bool, DEF_Bool, MF_Bool, ATT_Bool)
   
-  scaledPredictionData <- as.data.frame(scale(predictionData, center = mins, scale = maxs - mins))
+  scaledPredictionData <- as.data.frame(scale(predictionData, center = mins[1:17], scale = maxs[1:17] - mins[1:17]))
   
   pr.nn <- neuralnet::compute(nnValue,predictionData[,1:17])
   pr.nn_ <- pr.nn$net.result*(max(regData$Value)-min(regData$Value))+min(regData$Value)
@@ -113,3 +113,5 @@ getWagePrediction <- function(contract_expiry, rating, height, weight, age) {
   pr.nn_ <- pr.nn$net.result*(max(regressionData$WageUnified)-min(regressionData$WageUnified))+min(regressionData$WageUnified)
   return(pr.nn_)
 }
+
+testprediction <- getValuePrediction(1,50,180,70,25,52,50,50,50,50,50,50,50,0,0,0,1)
