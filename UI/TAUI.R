@@ -39,22 +39,42 @@ LAStabPanel <- tabPanel("Loan and Sell",
                        )
 )
 
-AtabPanel <- tabPanel("Acquire",
+AtabPanel <- tabPanel("Buy",
                        fluidPage(
                          fluidRow(
                            #OPTIONS
                            column(3,style = "background-color:#e8ebef;" ,
                                   selectInput("TAAClub",label=h3("Select club"),
-                                              choices = c(),selected=NULL)
+                                              choices = c(),selected=NULL),
+                                  conditionalPanel(condition="input.TAAClub",
+                                                  selectInput("TAAPosition", label=h4("Select Position"), choices = c(), selected=NULL),
+                                                  sliderInput("TAAPricerange",label=h4("Select price range (in k)"),min=0,max=100000,value=c(0,100000)),
+                                                  fluidRow(column(12,
+                                                                  
+                                                                  hr(),         
+                                                                  tags$div(class="header", checked=NA,
+                                                                           tags$h4("Reasons to Buy:")),
+                                                                  icon("bullseye"),
+                                                                  verbatimTextOutput("reasonAttackingPos2" ),
+                                                                  icon("credit-card"),
+                                                                  verbatimTextOutput("reasonWage2"),
+                                                                  icon("money"),
+                                                                  verbatimTextOutput("reasonValue2"),
+                                                                  icon("ban"),
+                                                                  verbatimTextOutput("reasonContract2"),
+                                                                  icon("graduation-cap"),
+                                                                  verbatimTextOutput("reasonAge2"),
+                                                                  hr()))
+                                  
+                                  )
+                               
                            ),
                            
                            
                            #OUTPUT
                            column(9, 
-                                  #test
-                                  tags$span(icon('circle'), style = "display: none;"))) 
                                   
-                                #  shiny::dataTableOutput("acquiretable")))
+                                  shiny::dataTableOutput("acquiretable")))
                        )
 )
                                                                              
