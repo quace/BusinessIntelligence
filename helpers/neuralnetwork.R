@@ -93,14 +93,13 @@ legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
 ########################################
 ########################################
 
-getValuePrediction <- function(contract_expiry, rating, height, weight, age) {
-  predictionData <- data.frame(contract_expiry, rating, height, weight, age)
-  maxs <- apply(predictionData, 2, max) 
-  mins <- apply(predictionData, 2, min)
+getValuePrediction <- function(contract_expiry, rating, height, weight, age, Potential, Pace, Shooting, Passing, Dribblingx,Defending,Physicality,GK_Score, GK_Bool, DEF_Bool, MF_Bool, ATT_Bool) {
+  predictionData <- data.frame(contract_expiry, rating, height, weight, age, Potential, Pace, Shooting, Passing, Dribblingx,Defending,Physicality,GK_Score, GK_Bool, DEF_Bool, MF_Bool, ATT_Bool)
+  
   scaledPredictionData <- as.data.frame(scale(predictionData, center = mins, scale = maxs - mins))
   
-  pr.nn <- neuralnet::compute(nnValue,predictionData[1:5])
-  pr.nn_ <- pr.nn$net.result*(max(regressionData$ValueUnified)-min(regressionData$ValueUnified))+min(regressionData$ValueUnified)
+  pr.nn <- neuralnet::compute(nnValue,predictionData[,1:17])
+  pr.nn_ <- pr.nn$net.result*(max(regData$Value)-min(regData$Value))+min(regData$Value)
   return(pr.nn_)
 }
 
