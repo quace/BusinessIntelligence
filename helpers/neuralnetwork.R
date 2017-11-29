@@ -2,7 +2,7 @@ library(dplyr)
 library(stringr)
 ##### ETL
 
-fullData <- read.csv("MergedCompleteDataNEW.csv")
+#fullData <- read.csv("MergedCompleteDataNEW.csv")
 
 keep <- c("Contract_Expiry", "Rating", "Height", "Weight", "Age", "Potential", "Pace", "Shooting", "Passing", "Dribblingx","Defending","Physicality","GK_Score","Preffered_Position","ValueUnified", "WageUnified")
 regressionData <- fullData[keep]

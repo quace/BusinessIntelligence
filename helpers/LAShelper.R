@@ -89,7 +89,8 @@ checkWage2 <- function(table){
 }
 
 checkValue <- function(table){
-  table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
+  predictionParams <- getPredictionParams(table)
+  table$PredictedValue <- getValuePrediction(predictionParams$Contract_Expiry,predictionParams$Rating,predictionParams$Height,predictionParams$Weight,predictionParams$Age,predictionParams$Potential, predictionParams$Pace, predictionParams$Shooting, predictionParams$Passing, predictionParams$Dribblingx,predictionParams$Defending,predictionParams$Physicality,predictionParams$GK_Score, predictionParams$GK_Bool, predictionParams$DEF_Bool, predictionParams$MF_Bool, predictionParams$ATT_Bool)
   table$reasonsToSell[table$ValueUnified > table$PredictedValue] <- table$reasonsToSell[table$ValueUnified > table$PredictedValue] + 1
   table$Reason[table$ValueUnified > table$PredictedValue]  <- paste(table$Reason[table$ValueUnified > table$PredictedValue] ,as.character(icon("money")),sep=" ")
   return(table)
@@ -172,22 +173,39 @@ constructLoandSellTable <- function(club){
   return(loanAndSellTable)
 }
 
-#TO DO: do this in the data file itself
-splitPositions <- function(table){
-  
-  table$ListPositions <- I(list("")) 
-  for (i in table) {
-    prefPos <- unlist(strsplit(toString(table$Preffered_Position[i]),"[/]"))
-    #only prefered positions
-    if(!(toString(table$Club_Position[i]) %in% prefPos)){
-      prefPos <- c(prefPos,toString(table$Club_Position[i]))
-    }
-    table$ListPositions[i] <- I(list(prefPos))
-    table$Positions[i] <- paste(prefPos,collapse="/")
-  }
-  return (table)
-}
 
+
+#set possible positions
+# possiblePositions <- function(table){
+#   table$Positions <- ""
+#   for (i in 1:nrow(table)) {
+#     prefPos <- unlist(strsplit(toString(table[i,]$Preffered_Position),"[/]"))
+#     #extend the preferred positions with the current club position IF different
+#     if(!(toString(table[i,]$Club_Position) %in% prefPos)){
+#       prefPos <- c(prefPos,toString(table[i,]$Club_Position))
+#     }
+#     table[i,]$Positions <- paste(prefPos,collapse="/")
+#   }
+#   return (table)
+# }
+
+filterOnPosition <- function(table,position){
+  table <- table%>% mutate(CanPlayPosition = ifelse(position %in% strsplit(toString(Positions),"/"),TRUE, FALSE))
+  
+  
+  # table$CanPlayPosition <- FALSE
+  # for (i in 1:nrow(table)) {
+  #   prefPos <- unlist(strsplit((table[i,]$Positions),"[/]"))
+  #   if(position %in% prefPos){
+  #     table[i,]$CanPlayPosition <- TRUE
+  #   }
+  #  
+  # }
+  
+  onlyPlayersOnPosition <- filter(table, CanPlayPosition)
+  
+  return (onlyPlayersOnPosition)
+}
 
 
 calculateWhichPlayersToBuy <- function(table){
@@ -234,26 +252,28 @@ constructAcquireTable <- function(club,position,pricemin, pricemax){
   #first filter out the players that are already members of the club
   acquireTable <- filter(fullData, Club != club)
   
+  acquireTable <- calculateWhichPlayersToBuy(acquireTable)
+  
   #filter on price
   acquireTable <- filter(acquireTable,ValueUnified >= pricemin) 
   acquireTable <- filter(acquireTable,ValueUnified <= pricemax)
   
   
-  #Possible positions
-  acquireTable$Positions <- paste(acquireTable$Club_Position,acquireTable$Preffered_Position,sep="/")
+  #Possible positions: SEE LOAD_FULL_DATA.R
+  #acquireTable <- possiblePositions(acquireTable)
+  #acquireTable$Positions <- paste(acquireTable$Preffered_Position,acquireTable$Club_Position,sep="/")
   
- # acquireTable <- splitPositions(acquireTable)
   #TO DO: Club_Position and Preffered_Position
   #if there is a position given, filter on position
   if(position != "Position"){
+    acquireTable <- filter(acquireTable,Club_Position == position)
     
-    
+   # acquireTable <- filterOnPosition(acquireTable,position)
   #  acquireTable <- filter(acquireTable, position %in% ListPositions)
   }
   
-  acquireTable <- calculateWhichPlayersToBuy(acquireTable)
     
-  acquireTable <- acquireTable %>% select("Photo","Name","Nationality","Age","Positions","Rating","Potential","Value","Reason")
+  acquireTable <- acquireTable %>% select("Photo","Name","Nationality","Age","Club_Position","Rating","Potential","Value","Reason")
     
   return(acquireTable)  
 }
