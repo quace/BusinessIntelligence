@@ -13,7 +13,7 @@ source("loaddata/load_full_data.R")
 
 
 #scrape data
-#source("scrapers/scrapers.R")
+source("scrapers/scrapers.R")
 
 # Source helpers ----
 source("helpers/helpers.R")

@@ -226,10 +226,22 @@ server <- function(input, output, session) {
   
   #######################
   #BRM
-  output$popularitytable = DT::renderDataTable({popularity})
+  # output$popularitytable = DT::renderDataTable({popularity})
+  # 
+  # #output$playerImages <- shiny::renderDataTable(playerImageTable,escape=FALSE)
+  # output$playerImages <- shiny::renderDataTable(htmlExtendedPopularPlayers,escape=FALSE)
+  # 
   
-  #output$playerImages <- shiny::renderDataTable(playerImageTable,escape=FALSE)
-  output$playerImages <- shiny::renderDataTable(htmlExtendedPopularPlayers,escape=FALSE)
+  output$facebookFollowersP1 <- renderText({"3154789"})
+  output$facebookFollowersP2 <- renderText({"15488932"})
+  output$twitterFollowersP1 <- renderText({"148756"})
+  output$twitterFollowersP2 <- renderText({"87543"})
+  output$instagramFollowersP1 <- renderText({"154893"})
+  output$instagramFollowersP2 <- renderText({"134876"})
+  
+  output$followerWorthP1 <- renderText({"87549600"})
+  
+  output$followerWorthP2 <- renderText({"87946320"})
   
   #######################
   #######################
@@ -315,7 +327,7 @@ server <- function(input, output, session) {
       output$reasonValue <- renderText({"Sell player for more \nthan they're worth"})
       output$reasonContract <- renderText({"Contract will soon expire"})
       output$reasonAge <- renderText({"Player is getting old \n(Keep in mind that he might be a \ngood tutor for younger players!)"})
-      output$reasonAttackingPos2 <- renderText({"Attacking technique is above average"})
+      output$reasonAttackingPos2 <- renderText({"Above average attacking technique"})
       output$reasonWage2 <- renderText({"Player is underpayed"})
       output$reasonValue2 <- renderText({"Player is worth more \nthan currently valued"})
       output$reasonAge2 <- renderText({"Player is young"})
