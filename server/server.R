@@ -18,7 +18,7 @@ server <- function(input, output, session) {
   test2 <- data.frame("Name" = fullData$Club_Position)
   choicesPosition <- rbind(test1,test2)
   updateSelectInput(session, "position", "Search position: ", choices = choicesPosition$Name)
-  
+  updateSelectInput(session,"TAAPosition",choices=choicesPosition$Name)
   
   test1 <- data.frame("Name" = c(""))
   test2 <- data.frame("Name" = fullData$Club)
@@ -315,15 +315,19 @@ server <- function(input, output, session) {
       output$reasonValue <- renderText({"Sell player for more \nthan they're worth"})
       output$reasonContract <- renderText({"Contract will soon expire"})
       output$reasonAge <- renderText({"Player is getting old \n(Keep in mind that he might be a \ngood tutor for younger players!)"})
-
+      output$reasonAttackingPos2 <- renderText({"Attacking technique is above average"})
+      output$reasonWage2 <- renderText({"Player is underpayed"})
+      output$reasonValue2 <- renderText({"Player is worth more \nthan currently valued"})
+      output$reasonAge2 <- renderText({"Player is young"})
+      output$reasonContract2 <- renderText({"Contract will soon expire"})
       
-      #getAcquireTable() <- function() {
-      #  if(!(input$TAAClub == "")){
-          
-      #  }
-      #}
       
-      #output$acquiretable <- shiny::renderDataTable(getAcquireTable(),escape=FALSE)
+      getAcquireTable <- function(){
+        if(!(input$TAAClub == "")){
+          return(constructAcquireTable(input$TAAClub,input$TAAPosition, input$TAAPricerange[1], input$TAAPricerange[2]))
+        }
+      }
+    output$acquiretable <- shiny::renderDataTable(getAcquireTable(),escape = FALSE)
       
       
 }

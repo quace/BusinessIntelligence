@@ -23,6 +23,7 @@ calculateWhichPlayersToLoan <- function(table){
 #master the pass
 checkAttackingTechnique <- function(table){
   table$reasonsToSellAttacking <- 0
+  table$numberBelowAverage <- 0
   
   meanStamina <- mean(table$Stamina)
   meanSpeed <- mean(table$Speed)
@@ -46,6 +47,32 @@ checkAttackingTechnique <- function(table){
   
   return(table)
 }
+checkAttackingTechnique2 <- function(table){
+  table$reasonsToSellAttacking <- 0
+  table$numberBelowAverage <- 0
+  
+  meanStamina <- mean(table$Stamina)
+  meanSpeed <- mean(table$Speed)
+  meanStrength <- mean(table$Strength)
+  meanAttackingPos <- mean(table$Attacking_Position)
+  meanPassing <- mean(table$Passing)
+  
+  #buy if attacking pos > mean
+  table$reasonsToSellAttacking[(table$Attacking_Position > meanAttackingPos)] <- table$reasonsToSellAttacking[(table$Attacking_Position > meanAttackingPos)] + 1 
+  
+  #or if min 2 of those other attributes are above the mean
+  table$numberBelowAverage[table$Stamina > meanStamina] <- table$numberBelowAverage[table$Stamina > meanStamina] + 1
+  table$numberBelowAverage[table$Speed > meanSpeed] <- table$numberBelowAverage[table$Speed > meanSpeed] + 1
+  table$numberBelowAverage[table$Strength > meanStrength] <- table$numberBelowAverage[table$Strength > meanStrength] + 1
+  table$numberBelowAverage[table$Passing > meanPassing] <- table$numberBelowAverage[table$Passing > meanPassing] + 1
+  
+  table$reasonsToSellAttacking[table$numberBelowAverage > 2] <- table$reasonsToSellAttacking[table$numberBelowAverage > 2] + 1
+  
+  table$reasonsToSell[table$reasonsToSellAttacking > 0] <- table$reasonsToSell[table$reasonsToSellAttacking > 0] + 1
+  table$Reason[table$reasonsToSellAttacking > 0] <- paste(table$Reason[table$reasonsToSellAttacking > 0] ,as.character(icon("bullseye")),sep=" ")
+  
+  return(table)
+}
 
 checkWage <- function(table){
   table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
@@ -54,10 +81,23 @@ checkWage <- function(table){
   return(table)
 }
 
+checkWage2 <- function(table){
+  table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
+  table$reasonsToSell[table$WageUnified < table$PredictedWage] <- table$reasonsToSell[table$WageUnified < table$PredictedWage] + 1
+  table$Reason[table$WageUnified < table$PredictedWage]  <- paste(table$Reason[table$WageUnified < table$PredictedWage] ,as.character(icon("credit-card")),sep=" ")
+  return(table)
+}
+
 checkValue <- function(table){
   table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
   table$reasonsToSell[table$ValueUnified > table$PredictedValue] <- table$reasonsToSell[table$ValueUnified > table$PredictedValue] + 1
   table$Reason[table$ValueUnified > table$PredictedValue]  <- paste(table$Reason[table$ValueUnified > table$PredictedValue] ,as.character(icon("money")),sep=" ")
+  return(table)
+}
+checkValue2 <- function(table){
+  table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
+  table$reasonsToSell[table$ValueUnified < table$PredictedValue] <- table$reasonsToSell[table$ValueUnified < table$PredictedValue] + 1
+  table$Reason[table$ValueUnified < table$PredictedValue]  <- paste(table$Reason[table$ValueUnified < table$PredictedValue] ,as.character(icon("money")),sep=" ")
   return(table)
 }
 
@@ -68,12 +108,19 @@ checkContract <- function(table){
   return(table)
 }
 
+
+
+
 checkAge <- function(table){
   table$reasonsToSell[table$Age > 30] <- table$reasonsToSell[table$Age > 30] + 1
   table$Reason[table$Age > 30] <- paste(table$Reason[table$Age > 30],as.character(icon("graduation-cap")),sep=" ")
   return(table)
 }
-
+checkAge2 <- function(table){
+  table$reasonsToSell[table$Age < 23] <- table$reasonsToSell[table$Age < 23] + 1
+  table$Reason[table$Age < 23] <- paste(table$Reason[table$Age < 23],as.character(icon("graduation-cap")),sep=" ")
+  return(table)
+}
 #suggest which players to sell: min 2 reasons why 
 calculateWhichPlayersToSell <- function(table){
   table$reasonsToSell <- 0
@@ -123,4 +170,90 @@ constructLoandSellTable <- function(club){
   loanAndSellTable <- loanAndSellTable %>% select("Photo","Name","Nationality","Age","Rating","Potential","Loan","Sell","Reason")
   
   return(loanAndSellTable)
+}
+
+#TO DO: do this in the data file itself
+splitPositions <- function(table){
+  
+  table$ListPositions <- I(list("")) 
+  for (i in table) {
+    prefPos <- unlist(strsplit(toString(table$Preffered_Position[i]),"[/]"))
+    #only prefered positions
+    if(!(toString(table$Club_Position[i]) %in% prefPos)){
+      prefPos <- c(prefPos,toString(table$Club_Position[i]))
+    }
+    table$ListPositions[i] <- I(list(prefPos))
+    table$Positions[i] <- paste(prefPos,collapse="/")
+  }
+  return (table)
+}
+
+
+
+calculateWhichPlayersToBuy <- function(table){
+  table$reasonsToSell <- 0
+  table$Reason <- as.character('')
+  
+  #attacking technique is high
+  table <- checkAttackingTechnique2(table)
+  
+  #peak potential has yet to come
+  
+  #wage < predicted wage (you overpay the player)
+  #table <- checkWage2(table)
+  
+  #value  < predicted value (you can make extra profit)
+  #table <- checkValue2(table)
+  
+  #contract_expiry - current year < 2j
+  table <- checkContract(table)
+  
+  #young people
+  table <- checkAge2(table)
+  
+  
+  #threshold is 2 atm
+  table$Sell[(table$reasonsToSell > 1)] <- as.character(icon('check-square'))  
+  table$Reason[(table$reasonsToSell < 2)]  <- as.character('')
+  
+  #filter and show only the players to sell
+  onlyPlayersToSell <- filter(table, reasonsToSell > 1)
+  
+  return(onlyPlayersToSell)
+}
+
+#Get which players to buy
+#@param club : the club that is buying the player
+#@param position: OPTIONAL position you wanna fill
+#@param pricemin & pricemax : price range in k
+constructAcquireTable <- function(club,position,pricemin, pricemax){
+  pricemin = pricemin*1000
+  pricemax = pricemax*1000
+  
+  
+  #first filter out the players that are already members of the club
+  acquireTable <- filter(fullData, Club != club)
+  
+  #filter on price
+  acquireTable <- filter(acquireTable,ValueUnified >= pricemin) 
+  acquireTable <- filter(acquireTable,ValueUnified <= pricemax)
+  
+  
+  #Possible positions
+  acquireTable$Positions <- paste(acquireTable$Club_Position,acquireTable$Preffered_Position,sep="/")
+  
+ # acquireTable <- splitPositions(acquireTable)
+  #TO DO: Club_Position and Preffered_Position
+  #if there is a position given, filter on position
+  if(position != "Position"){
+    
+    
+  #  acquireTable <- filter(acquireTable, position %in% ListPositions)
+  }
+  
+  acquireTable <- calculateWhichPlayersToBuy(acquireTable)
+    
+  acquireTable <- acquireTable %>% select("Photo","Name","Nationality","Age","Positions","Rating","Potential","Value","Reason")
+    
+  return(acquireTable)  
 }
