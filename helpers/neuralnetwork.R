@@ -63,15 +63,20 @@ testValue <- scaled[-index,]
 
 nValue <- names(trainValue)
 fValue <- as.formula(paste("Value ~", paste(nValue[!nValue %in% "Value"], collapse = " + ")))
-nnValue <- neuralnet(fValue, trainValue, hidden = c(12,12), threshold = 0.01,
-                     stepmax = 1e+05, rep = 1, startweights = NULL,
-                     learningrate.limit = NULL,
-                     learningrate.factor = list(minus = 0.5, plus = 1.2),
-                     learningrate=NULL, lifesign = "full",
-                     lifesign.step = 1000, algorithm = "rprop+",
-                     err.fct = "sse", act.fct = "logistic",
-                     linear.output = TRUE, exclude = NULL,
-                     constant.weights = NULL, likelihood = FALSE)
+# nnValue <- neuralnet(fValue, trainValue, hidden = c(12,12), threshold = 0.01,
+#                      stepmax = 1e+05, rep = 1, startweights = NULL,
+#                      learningrate.limit = NULL,
+#                      learningrate.factor = list(minus = 0.5, plus = 1.2),
+#                      learningrate=NULL, lifesign = "full",
+#                      lifesign.step = 1000, algorithm = "rprop+",
+#                      err.fct = "sse", act.fct = "logistic",
+#                      linear.output = TRUE, exclude = NULL,
+#                      constant.weights = NULL, likelihood = FALSE)
+
+#saveRDS(nnValue, "NNValue.rds")
+nnValue <- readRDS("NNValue.rds")
+
+#identical(nnValue, nnValue2, ignore.environment = TRUE)
 
 prNNValue <- compute(nnValue,testValue[,1:17])
 

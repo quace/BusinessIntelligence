@@ -19,3 +19,4 @@ getPlayerFBLikes <- function(playername) {
 #fullData$talking_about[565:10000] <- NA
 
 #write.csv(fullData,"fullDataFBextended.csv")
+
