@@ -1,4 +1,5 @@
-
+library(dplyr)
+library(stringr)
 ##### ETL
 
 fullData <- read.csv("MergedCompleteDataNEW.csv")
