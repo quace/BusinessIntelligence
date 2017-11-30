@@ -45,8 +45,8 @@ MergedCompleteData <- transform(MergedCompleteData, WageUnified = handlePrices(g
 write.csv(MergedCompleteData,file="MergedCompleteData3.csv")
 
 
-drops <- c("X","X.1","X.2")
+drops <- c("X","X.1","X.2","X.3")
 fullData <- fullData[ , !(names(fullData) %in% drops)]
-write.csv(fullData,file="fullDataNew.csv")
+write.csv(fullData,file="Data2.csv")
 
 

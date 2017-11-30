@@ -75,30 +75,25 @@ checkAttackingTechnique2 <- function(table){
 }
 
 checkWage <- function(table){
-  table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
-  table$reasonsToSell[table$WageUnified > table$PredictedWage] <- table$reasonsToSell[table$WageUnified > table$PredictedWage] + 1
-  table$Reason[table$WageUnified > table$PredictedWage]  <- paste(table$Reason[table$WageUnified > table$PredictedWage] ,as.character(icon("credit-card")),sep=" ")
+  table$reasonsToSell[table$WageUnified > (2*table$WagePrediction)] <- table$reasonsToSell[table$WageUnified > (2*table$WagePrediction)] + 1
+  table$Reason[table$WageUnified > (2*table$WagePrediction)]  <- paste(table$Reason[table$WageUnified > (2*table$WagePrediction)] ,as.character(icon("credit-card")),sep=" ")
   return(table)
 }
 
 checkWage2 <- function(table){
-  table$PredictedWage <- getWagePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
-  table$reasonsToSell[table$WageUnified < table$PredictedWage] <- table$reasonsToSell[table$WageUnified < table$PredictedWage] + 1
-  table$Reason[table$WageUnified < table$PredictedWage]  <- paste(table$Reason[table$WageUnified < table$PredictedWage] ,as.character(icon("credit-card")),sep=" ")
+  table$reasonsToSell[(2*table$WageUnified) < table$WagePrediction] <- table$reasonsToSell[(2*table$WageUnified) < table$WagePrediction] + 1
+  table$Reason[(2*table$WageUnified) < table$WagePrediction]  <- paste(table$Reason[(2*table$WageUnified) < table$WagePrediction] ,as.character(icon("credit-card")),sep=" ")
   return(table)
 }
 
 checkValue <- function(table){
-  predictionParams <- getPredictionParams(table)
-  table$PredictedValue <- getValuePrediction(predictionParams$Contract_Expiry,predictionParams$Rating,predictionParams$Height,predictionParams$Weight,predictionParams$Age,predictionParams$Potential, predictionParams$Pace, predictionParams$Shooting, predictionParams$Passing, predictionParams$Dribblingx,predictionParams$Defending,predictionParams$Physicality,predictionParams$GK_Score, predictionParams$GK_Bool, predictionParams$DEF_Bool, predictionParams$MF_Bool, predictionParams$ATT_Bool)
-  table$reasonsToSell[table$ValueUnified > table$PredictedValue] <- table$reasonsToSell[table$ValueUnified > table$PredictedValue] + 1
-  table$Reason[table$ValueUnified > table$PredictedValue]  <- paste(table$Reason[table$ValueUnified > table$PredictedValue] ,as.character(icon("money")),sep=" ")
+  table$reasonsToSell[table$ValueUnified > (1.5*table$ValuePrediction)] <- table$reasonsToSell[table$ValueUnified > (1.5*table$ValuePrediction)] + 1
+  table$Reason[table$ValueUnified > (1.5*table$ValuePrediction)]  <- paste(table$Reason[table$ValueUnified > (1.5*table$ValuePrediction)] ,as.character(icon("money")),sep=" ")
   return(table)
 }
 checkValue2 <- function(table){
-  table$PredictedValue <- getValuePrediction(table$Contract_Expiry,table$Rating,table$Height,table$Weight,table$Age)
-  table$reasonsToSell[table$ValueUnified < table$PredictedValue] <- table$reasonsToSell[table$ValueUnified < table$PredictedValue] + 1
-  table$Reason[table$ValueUnified < table$PredictedValue]  <- paste(table$Reason[table$ValueUnified < table$PredictedValue] ,as.character(icon("money")),sep=" ")
+  table$reasonsToSell[(1.5*table$ValueUnified) < table$ValuePrediction] <- table$reasonsToSell[(1.5*table$ValueUnified) < table$ValuePrediction] + 1
+  table$Reason[(1.5*table$ValueUnified) < table$ValuePrediction]  <- paste(table$Reason[(1.5*table$ValueUnified) < table$ValuePrediction] ,as.character(icon("money")),sep=" ")
   return(table)
 }
 
@@ -133,10 +128,10 @@ calculateWhichPlayersToSell <- function(table){
   #over peak potential 
   
   #wage > predicted wage (you overpay the player)
-  #table <- checkWage(table)
+  table <- checkWage(table)
   
   #value  > predicted value (you can make extra profit)
-  #table <- checkValue(table)
+  table <- checkValue(table)
   
   #contract_expiry - current year < 2j
   table <- checkContract(table)
@@ -218,10 +213,10 @@ calculateWhichPlayersToBuy <- function(table){
   #peak potential has yet to come
   
   #wage < predicted wage (you overpay the player)
-  #table <- checkWage2(table)
+  table <- checkWage2(table)
   
   #value  < predicted value (you can make extra profit)
-  #table <- checkValue2(table)
+  table <- checkValue2(table)
   
   #contract_expiry - current year < 2j
   table <- checkContract(table)
