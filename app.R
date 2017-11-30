@@ -4,16 +4,16 @@
 
 # Load packages ----
 
-#source("libraries.R")
+source("libraries.R")
 
 
 #load the database
-#source("loaddata/load_soccer_data.R")
-#source("loaddata/load_full_data.R")
+source("loaddata/load_soccer_data.R")
+source("loaddata/load_full_data.R")
 
 
 #scrape data
-#source("scrapers/scrapers.R")
+source("scrapers/scrapers.R")
 
 # Source helpers ----
 source("helpers/helpers.R")
