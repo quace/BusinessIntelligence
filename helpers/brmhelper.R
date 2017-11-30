@@ -8,7 +8,36 @@
 #playerImageTable <- data.frame(picture=c(popularPlayers$picture))
 #playerImageTable$picture <-sprintf("<img src='%s'>",playerImageTable$picture)  
 #test 3
-htmlExtendedPopularPlayers <- popularPlayers
-htmlExtendedPopularPlayers$picture <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$picture)
-htmlExtendedPopularPlayers$country <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$country)
-htmlExtendedPopularPlayers$club <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$club)
+# htmlExtendedPopularPlayers <- popularPlayers
+# htmlExtendedPopularPlayers$picture <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$picture)
+# htmlExtendedPopularPlayers$country <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$country)
+# htmlExtendedPopularPlayers$club <- sprintf("<img src='%s'>",htmlExtendedPopularPlayers$club)
+source("APIs/GlobalFacebook.R")
+currentStats <- c("","","")
+
+getFacebookLikes <- function(playername){
+  #clear current stats
+  assign("currentStats",c("","",""),envir = .GlobalEnv)
+  
+  followers = ""
+  if(playername != ""){
+  FBstats <- getPlayerFBLikes(playername)
+  followers <- toString(FBstats$total_likes)
+  talking <- toString(FBstats$talking_about)
+  #save in current stats
+  assign("currentStats",c(playername,followers,talking),envir = .GlobalEnv)
+  
+  }
+  
+  
+  return(followers)
+}
+
+getFacebookTalkingAbout <- function(playername){
+  talkingabout = ""
+  if(currentStats[1]==playername){
+    talkingabout = currentStats[3]
+  }
+  return(talkingabout)
+
+}

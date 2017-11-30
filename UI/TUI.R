@@ -6,4 +6,4 @@ TwitterSidebarPanel <-  sidebarPanel(
             checkboxInput("retweetsBool", "No retweets?", value = FALSE, width = NULL), hr(),
             textOutput("tweetCount"))
       
-TwitterMainPanel <-  mainPanel( h3("Twitter"),plotOutput("sentimentTable"),tableOutput("tablesentiments"), h3("Facebook"))
+TwitterMainPanel <-  mainPanel( h3("Twitter"),plotOutput("sentimentTable"),tableOutput("tablesentiments"))

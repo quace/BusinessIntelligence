@@ -19,6 +19,19 @@ server <- function(input, output, session) {
   choicesPosition <- rbind(test1,test2)
   updateSelectInput(session, "position", "Search position: ", choices = choicesPosition$Name)
   updateSelectInput(session,"TAAPosition",choices=choicesPosition$Name)
+ 
+  test1 <- data.frame("Name" = c(""))
+  test2 <- data.frame("Name" = fullData$Name)
+  choicesPlayer <- rbind(test1,test2)
+  updateSelectInput(session, "BRMPlayer1",choices = choicesPlayer$Name)
+  updateSelectInput(session, "BRMPlayer2",choices = choicesPlayer$Name)
+  test1 <- data.frame("Name" = c(""))
+  test2 <- data.frame("Name" = fullData$Club)
+  choicesClub <- rbind(test1,test2)
+  updateSelectInput(session, "BRMTeam1",choices = choicesClub$Name)
+  updateSelectInput(session, "BRMTeam2",choices = choicesClub$Name)
+  
+  
   
   test1 <- data.frame("Name" = c(""))
   test2 <- data.frame("Name" = fullData$Club)
@@ -187,23 +200,73 @@ server <- function(input, output, session) {
   ######################
   
   updateSelectInput(session, "playernameperf", "Search player: ", choices = player$player_name)
+  updateSelectInput(session, "compareplayerperf", "Compare with: ", choices = player$player_name)
+  updateSelectInput(session, "playernameAttr", "Search player: ", choices = player$player_name)
+  updateSelectInput(session, "compareplayerAttr", "Compare with: ", choices = player$player_name)
   
+  #### General/Potential ####
+  # output$personalperformance <- renderPlot({
+  #   
+  #   selectedplayer <- player %>% filter(player_name == input$playernameperf)
+  #   api_id <- selectedplayer$player_api_id
+  #   selectedPerf <- input$performanceSel
+  #   
+  #   yminimum <- as.integer(input$zoomPlayerPerf[1])
+  #   ymaximum <- as.integer(input$zoomPlayerPerf[2])
+  #   ybreaks <- as.integer(input$zoomPlayerPerf/10)
+  #   
+  #   plot <- player_attributes %>%
+  #     filter(player_api_id == api_id) %>%
+  #     ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum))
+  #   return(plot)
+  # })
+  # 
   output$personalperformance <- renderPlot({
     
     selectedplayer <- player %>% filter(player_name == input$playernameperf)
+    compareplayer <- player %>% filter(player_name == input$compareplayerperf)
     api_id <- selectedplayer$player_api_id
+    compare_id <- compareplayer$player_api_id
     selectedPerf <- input$performanceSel
     
     yminimum <- as.integer(input$zoomPlayerPerf[1])
     ymaximum <- as.integer(input$zoomPlayerPerf[2])
     ybreaks <- as.integer(input$zoomPlayerPerf/10)
     
-    plot <- player_attributes %>%
-      filter(player_api_id == api_id) %>%
-      ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum))
-    return(plot)
+    #TEST LEEN 30/11
+    # plot <- plot(x,y1,type="l",col="red")
+    # lines(x,y2,col="green")
+    # 
+   #  dataP1 <- player_attributes %>% filter(player_api_id == api_id)
+   #  dataP2 <- player_attributes %>% filter(player_api_id == compare_id)
+   # # zz <- melt(list(dataP1=dataP1,dataP2=dataP2),id.vars="overall_rating")
+    #505942   155782
+    # plot <- 
+    #   ggplot() +
+    #   geom_line(data=dataP1, aes_string("date",selectedPerf,group= 1),color="red") + 
+    #   geom_line(data=dataP2, aes_string("date",selectedPerf,group= 1),color ="blue") + geom_point() +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum)) 
+      
+    
+    #####
+    
+     plot <- player_attributes %>%
+       filter(player_api_id == api_id|player_api_id == compare_id) %>%
+       ggplot(aes_string("date",selectedPerf,group=1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum)) 
+     return(plot)
   })
   
+  # getHomeMatchesByPlayer <- function(playername){
+  #   selectedplayer <- player %>% filter(player_name == playername)
+  #   api_id <- selectedplayer$player_api_id
+  #   matchesOfPlayerX <- matches %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  #   return(matchesOfPlayerX)
+  # }
+  # getAwayMatchesByPlayer <- function(playername){
+  #   selectedplayer <- player %>% filter(player_name == playername)
+  #   api_id <- selectedplayer$player_api_id
+  #   matchesOfPlayerX <- matches %>% select(id, date, away_team_api_id, season, away_team_goal, away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= away_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  #   return(matchesOfPlayerX)
+  # }
   
   getHomeMatchesByPlayer <- function(playername){
     selectedplayer <- player %>% filter(player_name == playername)
@@ -223,7 +286,45 @@ server <- function(input, output, session) {
   output$homeMatchesByPlayer <- renderPlot({getHomeMatchesByPlayer(input$playernameperf)})
   output$awayMatchesByPlayer <- renderPlot({getAwayMatchesByPlayer(input$playernameperf)})
   
+  #### Attributes ####
+  output$attributePP <- renderPlot({
+    
+    selectedAttrPlayer <- player %>% filter(player_name == input$playernameAttr)
+    compareAttrPlayer <- player %>% filter(player_name == input$compareplayerAttr)
+    api_id <- selectedAttrPlayer$player_api_id
+    compare_id <- compareAttrPlayer$player_api_id
+    selectedAttr <- input$attribute
+    
+    yminimum <- as.integer(input$zoomPlayerPerf[1])
+    ymaximum <- as.integer(input$zoomPlayerPerf[2])
+    ybreaks <- as.integer(input$zoomPlayerPerf/10)
+    
+    plot2 <- player_attributes %>%
+      filter(player_api_id == api_id|player_api_id == compare_id) %>%
+      ggplot(aes_string("date",selectedAttr,group= 1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedAttr),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum)) 
+    
+    return(plot2)
+  })
   
+  ### Eden Hazard ###
+  output$starPP <- renderPlot({
+    
+    selectedStarPlayer <- player %>% filter(player_name == input$playernameStar)
+    compareStarPlayer <- player %>% filter(player_name == "Eden Hazard")
+    api_id <- selectedStarPlayer$player_api_id
+    compare_id <- compareStarPlayer$player_api_id
+    selectedStarAttr <- input$attributeStar
+    
+    yminimum <- as.integer(input$zoomPlayerPerf[1])
+    ymaximum <- as.integer(input$zoomPlayerPerf[2])
+    ybreaks <- as.integer(input$zoomPlayerPerf/10)
+    
+    plot3 <- player_attributes %>%
+      filter(player_api_id == api_id|player_api_id == compare_id) %>%
+      ggplot(aes_string("date",selectedStarAttr,group= 1)) + geom_point() + geom_line() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + geom_text(aes_string(label = selectedStarAttr),color = "red", vjust = 2) + coord_cartesian(ylim = c(yminimum, ymaximum)) 
+    
+    return(plot3)
+  })
   #######################
   #BRM
   # output$popularitytable = DT::renderDataTable({popularity})
@@ -232,16 +333,27 @@ server <- function(input, output, session) {
   # output$playerImages <- shiny::renderDataTable(htmlExtendedPopularPlayers,escape=FALSE)
   # 
   
-  output$facebookFollowersP1 <- renderText({"3154789"})
-  output$facebookFollowersP2 <- renderText({"15488932"})
-  output$twitterFollowersP1 <- renderText({"148756"})
-  output$twitterFollowersP2 <- renderText({"87543"})
-  output$instagramFollowersP1 <- renderText({"154893"})
-  output$instagramFollowersP2 <- renderText({"134876"})
+  #PLAYERS
+  output$facebookFollowersP1 <- renderText({getFacebookLikes(input$BRMPlayer1)})
+  output$facebookFollowersP2 <- renderText({getFacebookLikes(input$BRMPlayer2)})
+  output$twitterFollowersP1 <- renderText({getFacebookTalkingAbout(input$BRMPlayer1)})
+  output$twitterFollowersP2 <- renderText({getFacebookTalkingAbout(input$BRMPlayer2)})
+  #output$instagramFollowersP1 <- renderText({"154893"})
+  #output$instagramFollowersP2 <- renderText({"134876"})
   
   output$followerWorthP1 <- renderText({"87549600"})
   
   output$followerWorthP2 <- renderText({"87946320"})
+  
+  #TEAMS
+  output$facebookFollowersT1 <- renderText({getFacebookLikes(input$BRMTeam1)})
+  output$facebookFollowersT2 <- renderText({getFacebookLikes(input$BRMTeam2)})
+  output$twitterFollowersT1 <- renderText({getFacebookTalkingAbout(input$BRMTeam1)})
+  output$twitterFollowersT2 <- renderText({getFacebookTalkingAbout(input$BRMTeam2)})
+  output$followerWorthT1 <- renderText({"87549600"})
+  
+  output$followerWorthT2 <- renderText({"87946320"})
+  
   
   #######################
   #######################
