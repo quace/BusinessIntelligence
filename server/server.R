@@ -317,18 +317,18 @@ server <- function(input, output, session) {
   #output$instagramFollowersP1 <- renderText({"154893"})
   #output$instagramFollowersP2 <- renderText({"134876"})
   
-  output$followerWorthP1 <- renderText({"87549600"})
+  output$followerWorthP1 <- renderText({getWorthPlayer(input$BRMPlayer1)})
   
-  output$followerWorthP2 <- renderText({"87946320"})
+  output$followerWorthP2 <- renderText({getWorthPlayer(input$BRMPlayer2)})
   
   #TEAMS
   output$facebookFollowersT1 <- renderText({getFacebookLikes(input$BRMTeam1)})
   output$facebookFollowersT2 <- renderText({getFacebookLikes(input$BRMTeam2)})
   output$twitterFollowersT1 <- renderText({getFacebookTalkingAbout(input$BRMTeam1)})
   output$twitterFollowersT2 <- renderText({getFacebookTalkingAbout(input$BRMTeam2)})
-  output$followerWorthT1 <- renderText({"87549600"})
+  output$followerWorthT1 <- renderText({getWorthClub(input$BRMTeam1)})
   
-  output$followerWorthT2 <- renderText({"87946320"})
+  output$followerWorthT2 <- renderText({getWorthClub(input$BRMTeam2)})
   
   
   #######################

@@ -41,3 +41,13 @@ getFacebookTalkingAbout <- function(playername){
   return(talkingabout)
 
 }
+
+getWorthPlayer <- function(playername){
+  player <- filter(fullData, Name == playername )
+  worth = as.integer(player$ValueUnified - player$ValuePrediction)
+  
+  return(toString(worth))
+}
+getWorthClub <- function(clubname){
+  return("")
+}
