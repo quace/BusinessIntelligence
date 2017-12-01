@@ -338,8 +338,10 @@ server <- function(input, output, session) {
   
   ######################
   ######################
-  
-  updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = player$player_name)
+  test1 <- data.frame("Name" = c(""))
+  test2 <- data.frame("Name" = player$player_name)
+  choicesPlayer <- rbind(test1,test2)
+  updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = choicesPlayer$Name)
   
     source("APIs/GlobalTwitter.R")
 
@@ -355,9 +357,12 @@ server <- function(input, output, session) {
       })
       
       output$tweetCount  <- renderText({
+        try(
+        if(input$twitterSearchterm != ""){
         withProgress(message = 'Searching tweets...', value = 0, {
         df <- tweets()
         paste("Number of Tweets Found: ", as.character(nrow(df)))
+        })
         })
       })
       
@@ -367,6 +372,9 @@ server <- function(input, output, session) {
       })
       
       sentiments <- reactive({
+        options(show.error.messages = FALSE)
+        try(
+        if(input$twitterSearchterm != ""){
         sentiments <- getSentiments(cleantweets()$text)
         sentiments <- data.frame(sentiments)
         sentiments <- sentiments %>% summarise(anger = sum(anger),
@@ -389,11 +397,21 @@ server <- function(input, output, session) {
         sentiments$score[8] <- sentiments$score[8]/sum(sentiments$score)
         sentiments$score[9] <- sentiments$score[9]/sum(sentiments$score)
         return(sentiments)
+        }
+        )
       })
       
-      output$tablesentiments <- renderTable(sentiments())
+      output$tablesentiments <- renderTable(
+        
+        sentiments()
+            )
       
-      output$sentimentTable <- renderPlot({ withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})})
+      output$sentimentTable <- renderPlot({ 
+        try(
+        if(input$twitterSearchterm != ""){
+        withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})
+          }
+        )})
  
       
 ######################################################
