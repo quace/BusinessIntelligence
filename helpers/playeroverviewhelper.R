@@ -1,24 +1,24 @@
 #GLOBAL VARIABLES
 
 dontShowColumns = c("")
-
+renamedColumns = c("")
 
 
 #METHOD 1: works but super duper slow
 #TODO: fix!
 #construct a new data frame with only a part of the info
-newPlayerStats <- data.frame("name" = player_attributes$player_fifa_api_id,
-                             "overal rating" = player_attributes$overall_rating,
-                             "potential" = player_attributes$potential,
-                             "preferred foot" = player_attributes$preferred_foot)
+#newPlayerStats <- data.frame("name" = player_attributes$player_fifa_api_id,
+       #                      "overal rating" = player_attributes$overall_rating,
+       #                      "potential" = player_attributes$potential,
+      #                       "preferred foot" = player_attributes$preferred_foot)
 
 #replace the player id -> name
-row.index = function(d) which (newPlayerStats$name == d)[1]
-indices = sapply (player$player_fifa_api_id, row.index)
-newPlayerStats$name[indices] = player$player_name
+#row.index = function(d) which (newPlayerStats$name == d)[1]
+#indices = sapply (player$player_fifa_api_id, row.index)
+#newPlayerStats$name[indices] = player$player_name
 
 #drop all rows that didnt match with a name
-playerStats = newPlayerStats[indices,]
+#playerStats = newPlayerStats[indices,]
 
 
 
@@ -35,9 +35,9 @@ playerStats = newPlayerStats[indices,]
 
 
 
-hometeams <- matches  %>% dplyr::select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
-awayteams <- matches %>% dplyr::select(id, date, away_team_api_id, away_team_goal,away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
-matches  %>% dplyr::select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+#hometeams <- matches  %>% dplyr::select(id, date, home_team_api_id, home_team_goal,home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
+#awayteams <- matches %>% dplyr::select(id, date, away_team_api_id, away_team_goal,away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team,all=TRUE) %>% merge(player,all=TRUE)
+#matches  %>% dplyr::select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == 2625) %>% group_by(id) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot()   +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 
@@ -56,7 +56,9 @@ getPOTablePlayerName <- function(playername){
   #new way
   returnTable <- filter(fullData,Name==playername) %>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
   }
-  return (returnTable)
+  #rename output headers
+  returnTable.dt <- datatable(returnTable, colnames=c("Name", "Nationality","Club Position", "Club","Rating","Preferred Foot","Age"))
+  return (returnTable.dt)
 }
 getPOTableClub <- function(clubname){
   #TODO: fix this
@@ -64,7 +66,11 @@ getPOTableClub <- function(clubname){
   
   #new way
   returnTable <- filter(fullData,Club==clubname)%>% select(Name,Nationality,Club_Position,Club,Rating,Preffered_Foot,Age)
-  return (returnTable)  
+  
+  #rename output headers
+  returnTable.dt <- datatable(returnTable, colnames=c("Name", "Nationality","Club Position", "Club","Rating","Preferred Foot","Age"))
+  
+  return (returnTable.dt)  
 }
 
 
@@ -245,6 +251,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Acceleration")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Acceleration")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #speed 
@@ -258,6 +267,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Speed")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Speed")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #attacking pos
@@ -270,6 +282,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Attacking_Position")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Attacking Position")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #finishing
@@ -283,6 +298,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Finishing")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Finishing")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #shot power
@@ -296,6 +314,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Shot_Power")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Shot Power")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   
@@ -309,6 +330,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Long_Shots")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Long Shots")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #volleys
@@ -321,6 +345,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Volleys")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Volleys")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #penalties
@@ -333,6 +360,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Penalties")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Penalties")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #vision
@@ -345,6 +375,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Vision")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Vision")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #crossing
@@ -358,6 +391,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Crossing")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Crossing")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #freekick accuracy
@@ -370,6 +406,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Freekick_Accuracy")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Freekick Accuracy")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #short pass
@@ -381,7 +420,10 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
   } else {
     #dont show this column in the end table
     help <- append(dontShowColumns,"Short_Pass")
-    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Short Pass")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #long pass
@@ -394,6 +436,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Long_Pass")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Long Pass")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #curve
@@ -406,7 +451,10 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
   } else {
     #dont show this column in the end table
     help <- append(dontShowColumns,"Curve")
-    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Curve")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #agility
@@ -419,6 +467,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Agility")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Agility")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #balance
@@ -431,6 +482,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Balance")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Balance")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #reactions
@@ -444,6 +498,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Reactions")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Reactions")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #ballcontrol
@@ -457,6 +514,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Ball_Control")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Ball Control")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #dribbling
@@ -470,6 +530,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Dribbling")
     assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Dribbling")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #composure
@@ -483,6 +546,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Composure")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Composure")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #interceptions
@@ -495,6 +561,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Interceptions")
     assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Interceptions")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #heading
@@ -507,6 +576,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Heading")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Heading")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #marking
@@ -519,6 +591,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Marking")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Marking")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
     
   }
   
@@ -532,6 +607,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Standing_Tackle")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Standing Tackle")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #sliding tackle
@@ -544,7 +622,10 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
   } else {
     #dont show this column in the end table
     help <- append(dontShowColumns,"Sliding_Tackle")
-    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    assign("dontShowColumns",help,envir = .GlobalEnv)
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Sliding Tackle")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   
   #jumping
@@ -557,6 +638,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Jumping")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Jumping")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
     
   }
   
@@ -570,6 +654,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Stamina")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Stamina")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
     
   }
   
@@ -583,6 +670,9 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
     #dont show this column in the end table
     help <- append(dontShowColumns,"Strength")
     assign("dontShowColumns",help,envir = .GlobalEnv)  
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Strength")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
     
   }
   
@@ -596,7 +686,10 @@ filterOnExtendedAttributes <- function(returnTable,slidervalues){
   } else {
     #dont show this column in the end table
     help <- append(dontShowColumns,"Aggression")
-    assign("dontShowColumns",help,envir = .GlobalEnv)  
+    assign("dontShowColumns",help,envir = .GlobalEnv) 
+    help2 <- renamedColumns
+    help2 <- help2[which(help2!="Aggression")]
+    assign("renamedColumns",help2,envir = .GlobalEnv)
   }
   return (returnTable)
 }
@@ -607,6 +700,8 @@ getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferr
   returnTable <- fullData
   #reset vector of columns to show
   assign("dontShowColumns",c(""),envir = .GlobalEnv)
+  #reset vector of columns to rename
+  assign("renamedColumns",c("Name", "Nationality","Club Position", "Club","Preferred Foot","Age","Potential","Rating","Value","Acceleration","Speed","Attacking Position","Finishing","Shot Power","Long Shots","Volleys","Penalties","Vision","Crossing","Freekick Accuracy","Short Pass","Long Pass","Curve","Agility","Balance","Reactions","Ball Control","Dribbling","Composure","Interceptions","Heading","Marking","Standing Tackle","Sliding Tackle","Jumping","Stamina","Strength","Aggression"),envir = .GlobalEnv)
   
   
   if(simplified){
@@ -652,14 +747,22 @@ getPOTableAdvanced <- function(simplified, slidervalues,country,position,preferr
   #TO DO: select the right things to show depending if simplified or not
   if(simplified){
   returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Value,Pace,Shooting,Passing,Dribblingx,Physicality)
-  } else {
+  #rename output headers
+  returnTable.dt <- datatable(returnTable, colnames=c("Name", "Nationality","Club Position", "Club","Preferred Foot","Age","Potential","Rating","Value","Pace","Shooting","Passing","Dribbling","Physicality"))
+  
+   } else {
     returnTable <- returnTable %>% select(Name,Nationality,Club_Position,Club,Preffered_Foot,Age,Potential,Rating,Value,Acceleration,Speed,Attacking_Position,Finishing,Shot_Power,Long_Shots,Volleys,Penalties,Vision,Crossing,Freekick_Accuracy,Short_Pass,Long_Pass,Curve,Agility,Balance,Reactions,Ball_Control,Dribbling,Composure,Interceptions,Heading,Marking,Standing_Tackle,Sliding_Tackle,Jumping,Stamina,Strength,Aggression)
+   
     #remove the first ""
     dontShowColumns <- dontShowColumns[-1]
     #dont show these columns in the resulting table
     returnTable <- returnTable[,!(colnames(returnTable) %in% dontShowColumns)]
+    
+    #rename output headers
+    returnTable.dt <- datatable(returnTable, colnames=renamedColumns)
+    
   }
   
   
-  return (returnTable)
+  return (returnTable.dt)
 }

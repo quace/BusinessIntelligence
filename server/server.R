@@ -226,8 +226,9 @@ server <- function(input, output, session) {
       geom_line() +
       geom_point() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-      geom_text(aes_string(label = selectedPerf),color = "red", vjust = 2) +
-      coord_cartesian(ylim = c(yminimum, ymaximum)) 
+      geom_text_repel(aes_string(label = selectedPerf),color = "red") +
+      coord_cartesian(ylim = c(yminimum, ymaximum)) +
+      scale_colour_discrete(name="Players")
     
     return(plot)
   })
@@ -269,8 +270,9 @@ server <- function(input, output, session) {
       geom_line() +
       geom_point() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-      geom_text(aes_string(label = selectedAttr),color = "red", vjust = 2) +
-      coord_cartesian(ylim = c(yminimum, ymaximum)) 
+      geom_text_repel(aes_string(label = selectedAttr),color = "red") +
+      coord_cartesian(ylim = c(yminimum, ymaximum)) +
+      scale_colour_discrete(name="Players")
     
     return(plot2)
   })

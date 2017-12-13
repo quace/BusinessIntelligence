@@ -186,7 +186,7 @@ POtabPanel <- tabPanel("Player Overview",
   hr(),
   fluidRow(
     column(12, 
-           DT::dataTableOutput("playerstatstable"))
+           div(style= 'overflow-x: scroll',DT::dataTableOutput("playerstatstable")))
   )
 ))
 
