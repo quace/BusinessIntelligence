@@ -163,7 +163,7 @@ constructLoandSellTable <- function(club){
   
   loanAndSellTable$Sell <- as.character(icon('square-o'))
   loanAndSellTable <- calculateWhichPlayersToSell(loanAndSellTable)
-  loanAndSellTable <- loanAndSellTable %>% select("Photo","Name","Nationality","Age","Rating","Potential","Loan","Sell","Reason")
+  loanAndSellTable <- loanAndSellTable %>% dplyr::select("Photo","Name","Nationality","Age","Rating","Potential","Loan","Sell","Reason")
   
   return(loanAndSellTable)
 }
@@ -268,7 +268,7 @@ constructAcquireTable <- function(club,position,pricemin, pricemax){
   }
   
     
-  acquireTable <- acquireTable %>% select("Photo","Name","Nationality","Age","Club_Position","Rating","Potential","Value","Reason")
+  acquireTable <- acquireTable %>% dplyr::select("Photo","Name","Nationality","Age","Club_Position","Rating","Potential","Value","Reason")
     
   return(acquireTable)  
 }

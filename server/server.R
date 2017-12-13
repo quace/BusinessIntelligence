@@ -220,7 +220,7 @@ server <- function(input, output, session) {
     plot <- player_attributes %>%
       left_join(player, by = "player_api_id") %>%
       filter(player_api_id == api_id | player_api_id == compare_id) %>%
-      select(player_name, date, selectedPerf) %>%
+      dplyr::select(player_name, date, selectedPerf) %>%
       mutate(date = substring(date, 0, 10)) %>%
       ggplot(aes_string("date", selectedPerf, color = "player_name", group = "player_name")) +
       geom_line() +
@@ -236,13 +236,13 @@ server <- function(input, output, session) {
   getHomeMatchesByPlayer <- function(playername){
     selectedplayer <- player %>% filter(player_name == playername)
     api_id <- selectedplayer$player_api_id
-    matchesOfPlayerX <- matches %>% select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    matchesOfPlayerX <- matches %>% dplyr::select(id, date, home_team_api_id, season, home_team_goal, home_player_1:home_player_11) %>% gather(position, playerid,  home_player_1:home_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= home_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
     return(matchesOfPlayerX)
   }
   getAwayMatchesByPlayer <- function(playername){
     selectedplayer <- player %>% filter(player_name == playername)
     api_id <- selectedplayer$player_api_id
-    matchesOfPlayerX <- matches %>% select(id, date, away_team_api_id, season, away_team_goal, away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= away_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    matchesOfPlayerX <- matches %>% dplyr::select(id, date, away_team_api_id, season, away_team_goal, away_player_1:away_player_11) %>% gather(position, playerid,  away_player_1:away_player_11) %>% merge(team, all= T) %>% merge(player, all = T) %>% filter(playerid == api_id) %>% group_by(season) %>% ggplot(aes(x= season, y= away_team_goal)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
     return(matchesOfPlayerX)
   }
   output$homeMatchesByPlayer <- renderPlot({getHomeMatchesByPlayer(input$playernameperf)})
@@ -264,7 +264,7 @@ server <- function(input, output, session) {
     plot2 <- player_attributes %>%
       left_join(player, by = "player_api_id") %>%
       filter(player_api_id == api_id | player_api_id == compare_id) %>%
-      select(player_name, date, selectedAttr) %>%
+      dplyr::select(player_name, date, selectedAttr) %>%
       mutate(date = substring(date, 0, 10)) %>%
       ggplot(aes_string("date", selectedAttr, color = "player_name", group = "player_name")) +
       geom_line() +
@@ -293,7 +293,7 @@ server <- function(input, output, session) {
   #   plot3 <- player_attributes %>%
   #     left_join(player, by = "player_api_id") %>%
   #     filter(player_api_id == api_id | player_api_id == compare_id) %>%
-  #     select(player_name, date, selectedStarAttr) %>%
+  #     dplyr::select(player_name, date, selectedStarAttr) %>%
   #     mutate(date = substring(date, 0, 10)) %>%
   #     ggplot(aes_string("date", selectedStarAttr, color = "player_name", group = "player_name")) +
   #     geom_line() +
@@ -343,7 +343,8 @@ server <- function(input, output, session) {
   test1 <- data.frame("Name" = c(""))
   test2 <- data.frame("Name" = player$player_name)
   choicesPlayer <- rbind(test1,test2)
-  updateSelectInput(session, "twitterSearchterm", "Search player: ", choices = choicesPlayer$Name)
+  updateSelectInput(session, "twitterSearchterm", "Search player 1: ", choices = choicesPlayer$Name)
+  updateSelectInput(session, "twitterSearchterm2", "Search player 2: ", choices = choicesPlayer$Name)
   
     source("APIs/GlobalTwitter.R")
 
@@ -414,7 +415,68 @@ server <- function(input, output, session) {
         withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments(), aes(emotion, score)) + geom_bar(stat = "identity")})
           }
         )})
- 
+ #########################
+      tweets2 <- reactive({
+        tweets <- getTweets(input$twitterSearchterm2, n = input$numberOfTweets, input$retweetsBool) #tweets = df
+        return(tweets)
+      })
+      
+      output$tweetCount2  <- renderText({
+        try(
+          if(input$twitterSearchterm != ""){
+            withProgress(message = 'Searching tweets...', value = 0, {
+              df <- tweets()
+              paste("Number of Tweets Found: ", as.character(nrow(df)))
+            })
+          })
+      })
+      
+      cleantweets2 <- reactive({ #clean tweets for sentiment analysis
+        cleantweets <- cleanTweets(tweets2())
+        return(cleantweets)
+      })
+      
+      sentiments2 <- reactive({
+        options(show.error.messages = FALSE)
+        try(
+          if(input$twitterSearchterm2 != ""){
+            sentiments <- getSentiments(cleantweets2()$text)
+            sentiments <- data.frame(sentiments)
+            sentiments <- sentiments %>% summarise(anger = sum(anger),
+                                                   anticipation = sum(anticipation),
+                                                   disgust = sum(disgust),
+                                                   fear = sum(fear),
+                                                   joy = sum(joy),
+                                                   sadness = sum(sadness),
+                                                   surprise = sum(surprise),
+                                                   trust = sum(trust),
+                                                   positivity = sum(positivity))
+            sentiments <- sentiments %>% gather(emotion,score, anger:positivity)
+            sentiments$score[1] <- sentiments$score[1]/sum(sentiments$score)
+            sentiments$score[2] <- sentiments$score[2]/sum(sentiments$score)
+            sentiments$score[3] <- sentiments$score[3]/sum(sentiments$score)
+            sentiments$score[4] <- sentiments$score[4]/sum(sentiments$score)
+            sentiments$score[5] <- sentiments$score[5]/sum(sentiments$score)
+            sentiments$score[6] <- sentiments$score[6]/sum(sentiments$score)
+            sentiments$score[7] <- sentiments$score[7]/sum(sentiments$score)
+            sentiments$score[8] <- sentiments$score[8]/sum(sentiments$score)
+            sentiments$score[9] <- sentiments$score[9]/sum(sentiments$score)
+            return(sentiments)
+          }
+        )
+      })
+      
+      output$tablesentiments2 <- renderTable(
+        
+        sentiments2()
+      )
+      
+      output$sentimentTable2 <- renderPlot({ 
+        try(
+          if(input$twitterSearchterm != ""){
+            withProgress(message = 'Searching tweets...', value = 0, {ggplot(sentiments2(), aes(emotion, score)) + geom_bar(stat = "identity")})
+          }
+        )})
       
 ######################################################
 #Transfer Advice

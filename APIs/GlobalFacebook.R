@@ -4,7 +4,7 @@ library(dplyr)
 #TOKEN QUINTEN
 token <- "EAACEdEose0cBALIIxZA7u1RQiuZBZCFFKiZAGRbhHMAsHvB6ZCNpAEyLfeMruIVvb7AN2e2jK2TSHXNYyG4F7ThsZBRkZCAr3gj8v7jbshaMNzLqUiH2vWcwbPXatjkyKhFWDIhPkW0OFdIqUjzGLUTrNeFDPe9ZAZCV34IfkoA2nIZA4ACDeF5AjYeR2T5PyNBQQZD"
 #TOKEN LEEN
-token <-"EAACEdEose0cBAB4jiwTw9ZCWnsjtaEbtZCNmzBvT097FZBICo7XSACfsWeDQHcLInZBqouQ9CsyGiOQBF8AZCcujcoJWoapbebiMSGZAJF07pxoBOFteHggNO885WSjXWndHdv525DCu6bPSjwgCoBHoUqWlsS8uaWMYUlYv8fzgczoWHB3YLMy5acH8b6t55EK3918tYhKQZDZD"
+token <-"EAACEdEose0cBABdw6GbbzYeuFRW4g7X0mHfjx8C7ACpxVLycSSLDAK5acKMJCObka6ZC2hpvxoq9m3aj4wWoZBhFMBsFmRERxZCfLYXZCXGt5ijgNIZCFvdgBNiZCn7Q62jzxUbcfiFEBvkCtdlaUdrWbqDXV8IhgsRy67RkPpDlQgnEEH7flIbVAXxGTN3fAww9b45zsytAZDZD"
 
 #for(playername in fullData$Name[is.na(fullData$likes)]) {
 #  try(page <- Rfacebook::searchPages(playername, token, n = 50))

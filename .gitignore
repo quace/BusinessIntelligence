@@ -3,3 +3,4 @@ lo
 .idea/
 loaddata/soccer.sqlite
 scrapers/twitter_secrets.json.nogit
+scrapers/node_modules
