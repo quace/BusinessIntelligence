@@ -3,7 +3,7 @@
 #Run this to run the app
 
 # Load packages ----
-
+library(rsconnect)
 source("libraries.R")
 
 
@@ -25,3 +25,4 @@ source("server/server.R")
 
 # Run the app
 shinyApp(ui, server)
+deployApp()

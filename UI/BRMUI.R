@@ -86,15 +86,15 @@ BRMPlayerPanel <- tabPanel("Compare Players",
                                                                                    verbatimTextOutput("twitterFollowersP1" )),
                                                                             column(2)
                                                                           )
-                                                                          # ,
-                                                                          # fluidRow(
-                                                                          #   column(2),
-                                                                          #   column(2,
-                                                                          #          icon("instagram","fa-3x")),
-                                                                          #   column(6,
-                                                                          #          verbatimTextOutput("instagramFollowersP1" )),
-                                                                          #   column(2)
-                                                                          # )
+                                                                           ,
+                                                                           fluidRow(
+                                                                             column(2),
+                                                                             column(2,
+                                                                                    icon("twitter","fa-3x")),
+                                                                             column(6,
+                                                                                    verbatimTextOutput("instagramFollowersP1" )),
+                                                                            column(2)
+                                                                           )
                                                                           
                                                                           
                                                                           
@@ -123,15 +123,15 @@ BRMPlayerPanel <- tabPanel("Compare Players",
                                                                                    verbatimTextOutput("twitterFollowersP2" )),
                                                                             column(2)
                                                                           )
-                                                                          # ,
-                                                                          # fluidRow(
-                                                                          #   column(2),
-                                                                          #   column(2,
-                                                                          #          icon("instagram","fa-3x")),
-                                                                          #   column(6,
-                                                                          #          verbatimTextOutput("instagramFollowersP2" )),
-                                                                          #   column(2)
-                                                                          # )
+                                                                           ,
+                                                                           fluidRow(
+                                                                             column(2),
+                                                                             column(2,
+                                                                                    icon("twitter","fa-3x")),
+                                                                             column(6,
+                                                                                    verbatimTextOutput("instagramFollowersP2" )),
+                                                                             column(2)
+                                                                           )
                                                                          
                                                                           
                                                                    ),

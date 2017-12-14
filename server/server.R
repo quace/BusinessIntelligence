@@ -312,12 +312,13 @@ server <- function(input, output, session) {
   # 
   
   #PLAYERS
+
   output$facebookFollowersP1 <- renderText({getFacebookLikes(input$BRMPlayer1)})
   output$facebookFollowersP2 <- renderText({getFacebookLikes(input$BRMPlayer2)})
   output$twitterFollowersP1 <- renderText({getFacebookTalkingAbout(input$BRMPlayer1)})
   output$twitterFollowersP2 <- renderText({getFacebookTalkingAbout(input$BRMPlayer2)})
-  #output$instagramFollowersP1 <- renderText({"154893"})
-  #output$instagramFollowersP2 <- renderText({"134876"})
+  output$instagramFollowersP1 <- renderText({fullData$Followers[fullData$Name == input$BRMPlayer1]})
+  output$instagramFollowersP2 <- renderText({fullData$Followers[fullData$Name == input$BRMPlayer2]})
   
   output$followerWorthP1 <- renderText({getWorthPlayer(input$BRMPlayer1)})
   

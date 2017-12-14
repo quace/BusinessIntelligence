@@ -16,7 +16,7 @@ var twitter = []
 function cb(twitter){
    		stringify(twitter, function(err, csv){
    		 	console.log(twitter)
-			fs.writeFile('twitter_data.csv', csv, function (err) {
+			fs.writeFile('twitter_data_7201-8000.csv', csv, function (err) {
 			  if (err) return console.log(err);
 			  console.log('done');
 			});
@@ -32,7 +32,7 @@ fs.readFile('soccer6.csv', {encoding: 'binary'}, function (err,data) {
   	parse(data, function(err, output){
   		console.log(output[1])
   		output.sort(sortFunction);
-  		test = output.sort(sortFunction).slice(0,500)
+  		test = output.sort(sortFunction).slice(7201,8000)
 
 		async.each(test, function(player, callback) {
 
